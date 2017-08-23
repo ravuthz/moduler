@@ -31,7 +31,6 @@ public class User extends BaseEntity {
     private String username;
 
     @NotEmpty
-    @JsonIgnore
     private String password;
 
     @NotEmpty
@@ -46,7 +45,6 @@ public class User extends BaseEntity {
     @JsonIgnore
     private Integer failedLoginAttempts = 0;
 
-    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable
             (name = "user_role",
