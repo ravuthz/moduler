@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -23,6 +25,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends BaseEntity {
+
+    public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
     @NotEmpty
     @Email
     private String email;
@@ -52,9 +56,24 @@ public class User extends BaseEntity {
                     inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<Role> roles = new ArrayList<>();
 
+    public User(User user) {
+        this.email = user.email;
+        this.username = user.username;
+        this.password = user.password;
+        this.firstName = user.firstName;
+        this.lastName = user.lastName;
+        this.enabled = user.enabled;
+        this.failedLoginAttempts = user.failedLoginAttempts;
+        this.roles = user.roles;
+    }
+
     public User(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public void setPassword(String password) {
+        this.password = PASSWORD_ENCODER.encode(password);
     }
 
     public void setFullName(String firstName, String lastName) {

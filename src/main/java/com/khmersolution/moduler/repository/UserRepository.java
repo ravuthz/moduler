@@ -17,6 +17,7 @@ import java.util.List;
 public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
     User findByEmail(@Param("email") String email);
+
     User findByUsername(@Param("username") String username);
 
     @RestResource(path = "first-name", rel = "first-name")
