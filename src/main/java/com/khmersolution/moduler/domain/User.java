@@ -1,6 +1,7 @@
 package com.khmersolution.moduler.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,33 +24,38 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends BaseEntity {
-    @NotEmpty
     @Email
+    @NotEmpty
+    @ApiModelProperty(notes = "User's email address", required = true)
     private String email;
 
     @NotEmpty
+    @ApiModelProperty(notes = "User's username (Must be unique)", required = true)
     private String username;
 
     @NotEmpty
+    @ApiModelProperty(notes = "User's password (Must be strong)", required = true)
     private String password;
 
     @NotEmpty
+    @ApiModelProperty(notes = "User's first name (Or surname)", required = true)
     private String firstName;
 
     @NotEmpty
+    @ApiModelProperty(notes = "User's last name (Or family's name)", required = true)
     private String lastName;
 
-    @JsonIgnore
+    @ApiModelProperty(notes = "User's account status")
     private boolean enabled;
 
-    @JsonIgnore
+    @ApiModelProperty(notes = "User's login attempts count")
     private Integer failedLoginAttempts = 0;
 
+    @ApiModelProperty(notes = "User's roles")
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable
-            (name = "user_role",
-                    joinColumns = @JoinColumn(name = "role_id"),
-                    inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @JoinTable(name = "user_role",
+            joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<Role> roles = new ArrayList<>();
 
     public User(String firstName, String lastName) {
@@ -62,6 +68,7 @@ public class User extends BaseEntity {
         this.lastName = lastName;
     }
 
+    @JsonIgnore
     public String getFullName() {
         return this.firstName + " " + this.lastName;
     }

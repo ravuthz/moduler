@@ -2,6 +2,7 @@ package com.khmersolution.moduler.configure;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
@@ -18,11 +19,20 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
+
+    private String title = "User Management API";
+    private String description = "Users Restful API with Spring Boot + Spring Data + Spring Rest.";
+    private String version = "1.0.0";
+    private String termOfServiceUrl = null;
+    private String contactName = "ravuthz@gmail.com";
+    private String license = "License of API";
+    private String licenseUrl = "http://github.com/ravuthz/user-management-api";
+
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage(Package.REST))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo());
@@ -30,13 +40,25 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         ApiInfo apiInfo = new ApiInfo(
-                "User Management API",
-                "Users Restful API with Spring Boot + Spring Data + Spring Rest.",
-                "1.0.0",
-                null,
-                "ravuthz@gmail.com",
-                "License of API",
-                "API license URL");
+                title,
+                description,
+                version,
+                termOfServiceUrl,
+                contactName,
+                license,
+                licenseUrl);
         return apiInfo;
+    }
+
+    private ApiInfo apiInformation() {
+        return new ApiInfoBuilder()
+                .title(title)
+                .description(description)
+                .version(version)
+                .termsOfServiceUrl(termOfServiceUrl)
+                .contact(contactName)
+                .license(license)
+                .licenseUrl(licenseUrl)
+                .build();
     }
 }

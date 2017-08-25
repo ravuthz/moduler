@@ -1,5 +1,7 @@
 package com.khmersolution.moduler.domain;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,8 +25,10 @@ import java.util.List;
 public class Role extends BaseEntity {
 
     @NotEmpty
+    @ApiModelProperty(notes = "Role's name)")
     private String role;
 
+    @ApiModelProperty(notes = "Roles's users")
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable
             (name = "user_role",
