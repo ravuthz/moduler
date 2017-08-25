@@ -6,12 +6,11 @@ import com.khmersolution.moduler.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * Created by Vannaravuth Yo
@@ -28,14 +27,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<List<User>> getUsers() {
-        List<User> users = userService.getAll();
-        if (users.isEmpty()) {
-            logger.debug("Users does not exists");
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        logger.debug("Found " + users.size() + " Users => " + users);
+    @RequestMapping(params = {"page", "size"}, method = RequestMethod.GET)
+    public ResponseEntity<Page<User>> getUsers(@RequestParam("page") int page, @RequestParam("size") int size) {
+        Page<User> users = userService.getAll(page, size);
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
