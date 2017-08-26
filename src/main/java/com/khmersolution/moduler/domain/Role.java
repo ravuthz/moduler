@@ -1,5 +1,6 @@
 package com.khmersolution.moduler.domain;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,6 +22,7 @@ import java.util.List;
 @Table(name = "roles")
 @NoArgsConstructor
 @AllArgsConstructor
+@ApiModel(value = "Role", description = "Role's model resource")
 public class Role extends BaseEntity {
 
     @NotEmpty
@@ -37,5 +39,9 @@ public class Role extends BaseEntity {
 
     public Role(String role) {
         this.role = role;
+    }
+
+    public static Role staticRole(String role) {
+        return new Role(role);
     }
 }

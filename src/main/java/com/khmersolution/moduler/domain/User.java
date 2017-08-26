@@ -1,6 +1,7 @@
 package com.khmersolution.moduler.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,6 +12,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Created by Vannaravuth Yo
@@ -23,6 +25,7 @@ import java.util.List;
 @Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
+@ApiModel(value = "User")
 public class User extends BaseEntity {
     @Email
     @NotEmpty
@@ -61,6 +64,15 @@ public class User extends BaseEntity {
     public User(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public static User staticUser(String firstName, String lastName) {
+        User user = new User(firstName, lastName);
+        user.setEmail(firstName + "@gmail.com");
+        user.setUsername(firstName);
+        user.setPassword("123123");
+        user.setEnabled(true);
+        return user;
     }
 
     public void setFullName(String firstName, String lastName) {

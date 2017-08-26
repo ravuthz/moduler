@@ -3,6 +3,7 @@ package com.khmersolution.moduler.web.api;
 import com.khmersolution.moduler.configure.Route;
 import com.khmersolution.moduler.domain.User;
 import com.khmersolution.moduler.service.UserService;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,13 +22,16 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping(value = Route.API_USERS, produces = MediaType.APPLICATION_JSON_VALUE)
+@Api(value = "UserController", description = "User restful resource with rest controller", tags = "Custom UserController")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @RequestMapping(params = {"page", "size"}, method = RequestMethod.GET)
-    public ResponseEntity<Page<User>> getUsers(@RequestParam("page") int page, @RequestParam("size") int size) {
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<Page<User>> getUsers(
+            @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "size", defaultValue = "10", required = false) int size) {
         Page<User> users = userService.getAll(new PageRequest(page, size));
         return new ResponseEntity<>(users, HttpStatus.OK);
     }

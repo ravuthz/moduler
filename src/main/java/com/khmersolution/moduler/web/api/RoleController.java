@@ -3,6 +3,7 @@ package com.khmersolution.moduler.web.api;
 import com.khmersolution.moduler.configure.Route;
 import com.khmersolution.moduler.domain.Role;
 import com.khmersolution.moduler.service.RoleService;
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping(value = Route.API_ROLES, produces = MediaType.APPLICATION_JSON_VALUE)
+@Api(value = "RoleController", description = "Role restful resource  with rest controller", tags = "Custom RoleController")
 public class RoleController {
 
     @Autowired
