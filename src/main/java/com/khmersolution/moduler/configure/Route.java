@@ -9,6 +9,7 @@ public class Route {
 
     public static final String API = "/api/v1";
     public static final String API_ID = "/{id}";
-    public static final String API_USERS = API + "/users";
+    public static final String API_USERS = "/api/v1/users";
+    public static final String API_ROLES = "/api/v1/roles";
 
 }

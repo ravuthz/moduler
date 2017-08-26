@@ -16,6 +16,8 @@ import java.util.List;
 @Repository
 public interface RoleRepository extends PagingAndSortingRepository<Role, Long> {
     Role findByRole(@Param("role") String role);
+
     List<Role> findAllByRoleIsLike(@Param("role") String role);
+
     List<Role> findAllByRoleContains(@Param("role") String role);
 }

@@ -8,4 +8,5 @@ import com.khmersolution.moduler.domain.User;
  * Email : ravuthz@gmail.com
  */
 
-public interface UserService extends CRUDService<User> {}
+public interface UserService extends CRUDService<User> {
+}

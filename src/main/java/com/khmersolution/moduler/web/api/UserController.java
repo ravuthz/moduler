@@ -3,10 +3,10 @@ package com.khmersolution.moduler.web.api;
 import com.khmersolution.moduler.configure.Route;
 import com.khmersolution.moduler.domain.User;
 import com.khmersolution.moduler.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,18 +18,17 @@ import org.springframework.web.bind.annotation.*;
  * Email : ravuthz@gmail.com
  */
 
+@Slf4j
 @RestController
 @RequestMapping(value = Route.API_USERS, produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
-
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private UserService userService;
 
     @RequestMapping(params = {"page", "size"}, method = RequestMethod.GET)
     public ResponseEntity<Page<User>> getUsers(@RequestParam("page") int page, @RequestParam("size") int size) {
-        Page<User> users = userService.getAll(page, size);
+        Page<User> users = userService.getAll(new PageRequest(page, size));
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
@@ -37,17 +36,17 @@ public class UserController {
     public ResponseEntity<User> getUser(@PathVariable("id") Long id) {
         User user = userService.getById(id);
         if (user == null) {
-            logger.debug("User with id " + id + " does not exists");
+            log.debug("User with id " + id + " does not exists");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        logger.debug("User with id " + id + " found => " + user);
+        log.debug("User with id " + id + " found => " + user);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<User> createUser(@RequestBody User user) {
         User createdUser = userService.save(user);
-        logger.debug("User with id " + createdUser.getId() + " created => " + createdUser);
+        log.debug("User with id " + createdUser.getId() + " created => " + createdUser);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
@@ -55,12 +54,12 @@ public class UserController {
     public ResponseEntity<User> updateUser(@RequestBody User user, @PathVariable("id") Long id) {
         User existing = userService.getById(id);
         if (existing == null) {
-            logger.debug("User with id " + id + " does not exists");
+            log.debug("User with id " + id + " does not exists");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         user.setId(id);
         User updatedUser = userService.save(user);
-        logger.debug("User with id " + updatedUser.getId() + " updated => " + updatedUser);
+        log.debug("User with id " + updatedUser.getId() + " updated => " + updatedUser);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
@@ -68,11 +67,11 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
         User user = userService.getById(id);
         if (user == null) {
-            logger.debug("User with id " + id + " does not exists");
+            log.debug("User with id " + id + " does not exists");
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         userService.delete(id);
-        logger.debug("User with id " + id + " deleted => " + user);
+        log.debug("User with id " + id + " deleted => " + user);
         return new ResponseEntity<>(HttpStatus.GONE);
     }
 

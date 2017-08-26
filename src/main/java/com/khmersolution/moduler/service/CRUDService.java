@@ -1,6 +1,7 @@
 package com.khmersolution.moduler.service;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.io.Serializable;
 import java.util.List;
@@ -13,8 +14,8 @@ import java.util.List;
 
 public interface CRUDService<E> {
     List<E> getAll();
-    
-    Page<E> getAll(int page, int size);
+
+    Page<E> getAll(Pageable pageable);
 
     E getById(Serializable id);
 

@@ -9,6 +9,6 @@ public class Package {
     public static final String BASE = "com.khmersolution.moduler";
     public static final String WEB = "com.khmersolution.moduler.web";
     public static final String REST = "com.khmersolution.moduler.web.api";
-    public static final String ENTITY =  "com.khmersolution.moduler.domain";
+    public static final String ENTITY = "com.khmersolution.moduler.domain";
     public static final String REPOSITORY = "com.khmersolution.moduler.repository";
 }

@@ -1,7 +1,7 @@
 package com.khmersolution.moduler.service;
 
-import com.khmersolution.moduler.domain.User;
-import com.khmersolution.moduler.repository.UserRepository;
+import com.khmersolution.moduler.domain.Role;
+import com.khmersolution.moduler.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,32 +12,32 @@ import java.util.List;
 
 /**
  * Created by Vannaravuth Yo
- * Date : 8/24/2017, 2:23 PM
+ * Date : 8/26/2017, 1:14 PM
  * Email : ravuthz@gmail.com
  */
 
 @Service
-public class UserServiceImpl implements UserService {
+public class RoleServiceImpl implements RoleService {
     @Autowired
-    private UserRepository repository;
+    private RoleRepository repository;
 
     @Override
-    public List<User> getAll() {
-        return (List<User>) repository.findAll();
+    public List<Role> getAll() {
+        return (List<Role>) repository.findAll();
     }
 
     @Override
-    public Page<User> getAll(Pageable pageable) {
+    public Page<Role> getAll(Pageable pageable) {
         return repository.findAll(pageable);
     }
 
     @Override
-    public User getById(Serializable id) {
+    public Role getById(Serializable id) {
         return repository.findOne((Long) id);
     }
 
     @Override
-    public User save(User entity) {
+    public Role save(Role entity) {
         return repository.save(entity);
     }
 
