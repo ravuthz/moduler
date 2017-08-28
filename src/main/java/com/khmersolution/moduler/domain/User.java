@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -27,6 +28,9 @@ import java.util.List;
 @AllArgsConstructor
 @ApiModel(value = "User")
 public class User extends BaseEntity {
+
+    public static final BCryptPasswordEncoder ENCODER = new BCryptPasswordEncoder();
+
     @Email
     @NotEmpty
     @ApiModelProperty(notes = "User's email address", required = true)
@@ -61,6 +65,17 @@ public class User extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<Role> roles = new ArrayList<>();
 
+    public User(User user) {
+        this.email = user.email;
+        this.username = user.username;
+        this.password = user.password;
+        this.firstName = user.firstName;
+        this.lastName = user.lastName;
+        this.enabled = user.enabled;
+        this.failedLoginAttempts = user.failedLoginAttempts;
+        this.roles = user.roles;
+    }
+
     public User(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -70,7 +85,7 @@ public class User extends BaseEntity {
         User user = new User(firstName, lastName);
         user.setEmail(firstName + "@gmail.com");
         user.setUsername(firstName);
-        user.setPassword("123123");
+        user.setPassword(ENCODER.encode("123123"));
         user.setEnabled(true);
         return user;
     }
