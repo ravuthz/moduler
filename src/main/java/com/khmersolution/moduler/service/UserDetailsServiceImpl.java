@@ -1,10 +1,9 @@
 package com.khmersolution.moduler.service;
 
 import com.khmersolution.moduler.domain.User;
-import com.khmersolution.moduler.domain.UserDetails;
-import com.khmersolution.moduler.repository.RoleRepository;
 import com.khmersolution.moduler.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +16,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
 
     @Autowired
-    public UserDetailsServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserDetailsServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -31,7 +28,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("No user present with username: " + username);
         }
-        return new UserDetails(user);
-
+        return userRepository.findByUsername(username);
     }
+
 }
