@@ -36,8 +36,10 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
         oauthServer
-                .tokenKeyAccess("hasAuthority('TRUSTED_CLIENT')")
-                .checkTokenAccess("hasAuthority('TRUSTED_CLIENT')");
+                .tokenKeyAccess("permitAll()")
+                .checkTokenAccess("isAuthenticated()");
+//                .tokenKeyAccess("hasAuthority('TRUSTED_CLIENT')")
+//                .checkTokenAccess("hasAuthority('TRUSTED_CLIENT')");
     }
 
     @Override
