@@ -20,10 +20,9 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 @SuppressWarnings("SpringJavaAutowiringInspection")
 public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 
+    private String resourceId = "resource";
     private int accessTokenValiditySeconds = 10000;
     private int refreshTokenValiditySeconds = 30000;
-
-    private String resourceId = "resource";
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -36,8 +35,10 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
         oauthServer
-                .tokenKeyAccess("hasAuthority('TRUSTED_CLIENT')")
-                .checkTokenAccess("hasAuthority('TRUSTED_CLIENT')");
+                .tokenKeyAccess("permitAll()")
+                .checkTokenAccess("isAuthenticated()");
+//                .tokenKeyAccess("hasAuthority('TRUSTED_CLIENT')")
+//                .checkTokenAccess("hasAuthority('TRUSTED_CLIENT')");
     }
 
     @Override
@@ -52,4 +53,5 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
                 .accessTokenValiditySeconds(accessTokenValiditySeconds)
                 .refreshTokenValiditySeconds(refreshTokenValiditySeconds);
     }
+
 }
