@@ -25,7 +25,7 @@ public class UserDetails extends User implements org.springframework.security.co
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<Role> roleList = this.getRoles();
         if (!roleList.isEmpty()) {
-            roleList.forEach(role -> userRoles.add(role.getRole()));
+            roleList.forEach(role -> userRoles.add(role.getRole().toUpperCase()));
         }
         String roles = StringUtils.collectionToCommaDelimitedString(userRoles);
         return AuthorityUtils.commaSeparatedStringToAuthorityList(roles);

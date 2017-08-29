@@ -43,35 +43,42 @@ public class ModulerApplication implements CommandLineRunner {
 
         roleRepository.save(Arrays.asList(
                 Role.staticRole("USER"),
-                Role.staticRole("ADMIN")
+                Role.staticRole("ADMIN"),
+                Role.staticRole("TRUSTED_CLIENT")
         ));
 
         log.debug("Start creating users ...");
 
         userRepository.save(Arrays.asList(
                 User.staticUser("ravuthz", "yo"),
-                User.staticUser("adminz", "yes")
-
+                User.staticUser("adminz", "yes"),
+                User.staticUser("clientz", "trusted")
         ));
 
         log.debug("Start assign roles to users ...");
 
         Role userRole = roleRepository.findByRole("USER");
         Role adminRole = roleRepository.findByRole("ADMIN");
+        Role clientRole = roleRepository.findByRole("TRUSTED_CLIENT");
 
         User user = userRepository.findByUsername("ravuthz");
         User admin = userRepository.findByUsername("adminz");
+        User client = userRepository.findByUsername("clientz");
 
         user.getRoles().add(userRole);
         admin.getRoles().add(adminRole);
+        client.getRoles().add(clientRole);
 
-        userRepository.save(Arrays.asList(user, admin));
+        userRepository.save(Arrays.asList(user, admin, client));
 
         log.debug("Check all roles and users ...");
 
         log.debug(userRole.toString());
         log.debug(adminRole.toString());
+        log.debug(clientRole.toString());
+
         log.debug(user.toString());
         log.debug(admin.toString());
+        log.debug(client.toString());
     }
 }
