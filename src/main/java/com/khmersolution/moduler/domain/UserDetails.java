@@ -1,5 +1,6 @@
 package com.khmersolution.moduler.domain;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.util.StringUtils;
@@ -13,6 +14,8 @@ import java.util.List;
  * Date : 8/28/2017, 4:39 PM
  * Email : ravuthz@gmail.com
  */
+
+@Slf4j
 public class UserDetails extends User implements org.springframework.security.core.userdetails.UserDetails {
     private static final long serialVersionUID = 1L;
     private List<String> userRoles = new ArrayList<>();
@@ -25,9 +28,10 @@ public class UserDetails extends User implements org.springframework.security.co
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<Role> roleList = this.getRoles();
         if (!roleList.isEmpty()) {
-            roleList.forEach(role -> userRoles.add(role.getRole().toUpperCase()));
+            roleList.forEach(role -> userRoles.add(role.getName().toUpperCase()));
         }
         String roles = StringUtils.collectionToCommaDelimitedString(userRoles);
+        log.debug("userRoles: " + roles);
         return AuthorityUtils.commaSeparatedStringToAuthorityList(roles);
     }
 
