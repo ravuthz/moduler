@@ -59,10 +59,7 @@ public class User extends BaseEntity {
     private Integer failedLoginAttempts = 0;
 
     @ApiModelProperty(notes = "User's roles")
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_role",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Role> roles = new ArrayList<>();
 
     public User(User user) {
@@ -98,20 +95,6 @@ public class User extends BaseEntity {
     @JsonIgnore
     public String getFullName() {
         return this.firstName + " " + this.lastName;
-    }
-
-    public void addRole(Role role) {
-        if (!this.getRoles().contains(role)) {
-            this.getRoles().add(role);
-        }
-        if (!role.getUsers().contains(this)) {
-            role.getUsers().add(this);
-        }
-    }
-
-    public void removeRole(Role role) {
-        this.getRoles().remove(role);
-        role.getUsers().remove(this);
     }
 
 }

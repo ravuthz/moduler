@@ -22,26 +22,31 @@ import java.util.List;
 @Table(name = "roles")
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel(value = "Role", description = "Role's model resource")
+@ApiModel(value = "Role")
 public class Role extends BaseEntity {
 
     @NotEmpty
-    @ApiModelProperty(notes = "Role's name)")
-    private String role;
+    @ApiModelProperty(notes = "Role's name")
+    private String name;
 
-    @ApiModelProperty(notes = "Roles's users")
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable
-            (name = "user_role",
-                    joinColumns = @JoinColumn(name = "role_id"),
-                    inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private List<User> users = new ArrayList<>();
+    @ApiModelProperty(notes = "Role's note")
+    private String note;
 
-    public Role(String role) {
-        this.role = role;
+    @ApiModelProperty(notes = "Role's users")
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    private User user;
+
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Permission> permissions = new ArrayList<>();
+
+    public Role(String name) {
+        this.name = name;
     }
 
-    public static Role staticRole(String role) {
-        return new Role(role);
+    public Role(String name, String note) {
+        this.name = name;
+        this.note = note;
     }
+
 }

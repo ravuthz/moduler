@@ -6,4 +6,5 @@ package com.khmersolution.moduler.service;
  * Email : ravuthz@gmail.com
  */
 
-public interface UserDetailsService extends org.springframework.security.core.userdetails.UserDetailsService {}
+public interface UserDetailsService extends org.springframework.security.core.userdetails.UserDetailsService {
+}

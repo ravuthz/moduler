@@ -2,8 +2,10 @@ package com.khmersolution.moduler.configure;
 
 import com.khmersolution.moduler.service.UserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,6 +21,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
+@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 @SuppressWarnings("SpringJavaAutowiringInspection")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -38,7 +41,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .formLogin().disable()
                 .anonymous().disable()
-                .authorizeRequests().anyRequest().denyAll();
+                .httpBasic().and()
+                .authorizeRequests()
+                .anyRequest().authenticated();
     }
 
     @Override
