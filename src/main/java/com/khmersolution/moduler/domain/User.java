@@ -63,10 +63,10 @@ public class User extends BaseEntity implements Serializable {
     private Integer failedLoginAttempts = 0;
 
     @ApiModelProperty(notes = "User's roles")
-    @ManyToMany(mappedBy = "users")
-//    @JoinTable(name = "userRole",
-//            joinColumns = @JoinColumn(name = "roleId"),
-//            inverseJoinColumns = @JoinColumn(name = "userId"))
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "userRole",
+            joinColumns = @JoinColumn(name = "userId"),
+            inverseJoinColumns = @JoinColumn(name = "roleId"))
     private List<Role> roles = new ArrayList<>();
 
     public User(User user) {

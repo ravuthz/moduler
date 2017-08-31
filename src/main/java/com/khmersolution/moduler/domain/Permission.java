@@ -7,8 +7,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Vannaravuth Yo
@@ -33,9 +38,9 @@ public class Permission extends BaseEntity implements Serializable {
     @ApiModelProperty(notes = "Permission's note")
     private String note;
 
-    @ManyToOne
-    @JoinColumn(name = "roleId")
-    private Role role;
+    @ApiModelProperty(notes = "Permission's role")
+    @ManyToMany(mappedBy = "permissions", fetch = FetchType.EAGER)
+    private List<Role> roles = new ArrayList<>();
 
     public Permission(String name) {
         this.name = name;

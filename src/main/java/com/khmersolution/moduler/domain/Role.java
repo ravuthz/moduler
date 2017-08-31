@@ -38,13 +38,14 @@ public class Role extends BaseEntity implements Serializable {
     private String note;
 
     @ApiModelProperty(notes = "Roles's users")
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "userRole",
-            joinColumns = @JoinColumn(name = "roleId"),
-            inverseJoinColumns = @JoinColumn(name = "userId"))
+    @ManyToMany(mappedBy = "roles")
     private List<User> users = new ArrayList<>();
 
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
+    @ApiModelProperty(notes = "Role's permissions")
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "rolePermission",
+            joinColumns = @JoinColumn(name = "roleId"),
+            inverseJoinColumns = @JoinColumn(name = "permissionId"))
     private List<Permission> permissions = new ArrayList<>();
 
     public Role(String name) {

@@ -68,17 +68,7 @@ public class ModulerApplication implements CommandLineRunner {
         assignRoleToUser("ADMIN", "adminz");
         assignRoleToUser("CLIENT", "clientz");
 
-        log.debug("Check all permissions ...");
-        List<Permission> permissionList = (List<Permission>) permissionRepository.findAll();
-        permissionList.forEach(item -> log.debug(item.toString()));
-
-        log.debug("Check all roles ...");
-        List<Role> roleList = (List<Role>) roleRepository.findAll();
-        roleList.forEach(item -> log.debug(item.toString()));
-
-        log.debug("Check all users ...");
-        List<User> userList = (List<User>) userRepository.findAll();
-        userList.forEach(item -> log.debug(item.toString()));
+        listAllData();
     }
 
     private void initRoles() {
@@ -109,15 +99,25 @@ public class ModulerApplication implements CommandLineRunner {
         ));
     }
 
+    private void listAllData() {
+        log.debug("Check all permissions ...");
+        List<Permission> permissionList = (List<Permission>) permissionRepository.findAll();
+        permissionList.forEach(item -> log.debug(item.toString()));
+
+        log.debug("Check all roles ...");
+        List<Role> roleList = (List<Role>) roleRepository.findAll();
+        roleList.forEach(item -> log.debug(item.toString()));
+
+        log.debug("Check all users ...");
+        List<User> userList = (List<User>) userRepository.findAll();
+        userList.forEach(item -> log.debug(item.toString()));
+    }
+
     private void assignPermissionsToRole(String name, List<Permission> permissions) {
         Role role = roleRepository.findByName(name);
         if (role != null) {
-            permissions.forEach(permission -> {
-                permission.setRole(role);
-                permissionRepository.save(permission);
-            });
-//            permissions.forEach(role.getPermissions()::add);
-//            roleRepository.save(role);
+            permissions.forEach(role.getPermissions()::add);
+            roleRepository.save(role);
         }
     }
 
