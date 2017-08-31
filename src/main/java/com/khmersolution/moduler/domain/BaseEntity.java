@@ -17,15 +17,10 @@ import java.util.Date;
 @MappedSuperclass
 public class BaseEntity {
     @Id
-    @JsonIgnore
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     @ApiModelProperty(notes = "The database generated entity ID")
     private Long id;
-
-    @Version
-    @JsonIgnore
-    @ApiModelProperty(notes = "The auto-generated version of the entity")
-    private Integer version;
 
     @JsonIgnore
     @ApiModelProperty(notes = "The auto-generated date of the entity creation")

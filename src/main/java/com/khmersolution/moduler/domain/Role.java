@@ -5,9 +5,11 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,11 +21,14 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "roles")
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "roles")
 @ApiModel(value = "Role")
-public class Role extends BaseEntity {
+@ToString(exclude = "users")
+public class Role extends BaseEntity implements Serializable {
+
+    private static final long serialVersionUID = -5403723535622562579L;
 
     @NotEmpty
     @ApiModelProperty(notes = "Role's name")
@@ -32,12 +37,14 @@ public class Role extends BaseEntity {
     @ApiModelProperty(notes = "Role's note")
     private String note;
 
-    @ApiModelProperty(notes = "Role's users")
-    @ManyToOne
-    @JoinColumn(name = "userId")
-    private User user;
+    @ApiModelProperty(notes = "Roles's users")
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "userRole",
+            joinColumns = @JoinColumn(name = "roleId"),
+            inverseJoinColumns = @JoinColumn(name = "userId"))
+    private List<User> users = new ArrayList<>();
 
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
     private List<Permission> permissions = new ArrayList<>();
 
     public Role(String name) {

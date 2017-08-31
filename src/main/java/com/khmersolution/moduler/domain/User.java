@@ -6,11 +6,13 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,13 +25,15 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "users")
 @ApiModel(value = "User")
-public class User extends BaseEntity {
+@ToString(exclude = "roles")
+public class User extends BaseEntity implements Serializable {
 
     public static final BCryptPasswordEncoder ENCODER = new BCryptPasswordEncoder();
+    private static final long serialVersionUID = -7721781417455120512L;
 
     @Email
     @NotEmpty
@@ -59,7 +63,10 @@ public class User extends BaseEntity {
     private Integer failedLoginAttempts = 0;
 
     @ApiModelProperty(notes = "User's roles")
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "users")
+//    @JoinTable(name = "userRole",
+//            joinColumns = @JoinColumn(name = "roleId"),
+//            inverseJoinColumns = @JoinColumn(name = "userId"))
     private List<Role> roles = new ArrayList<>();
 
     public User(User user) {

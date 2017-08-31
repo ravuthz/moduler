@@ -7,10 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Created by Vannaravuth Yo
@@ -24,7 +22,9 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @AllArgsConstructor
 @ApiModel(value = "Permission")
-public class Permission extends BaseEntity {
+public class Permission extends BaseEntity implements Serializable {
+
+    private static final long serialVersionUID = -7085459662547835139L;
 
     @NotEmpty
     @ApiModelProperty(notes = "Permission's name")

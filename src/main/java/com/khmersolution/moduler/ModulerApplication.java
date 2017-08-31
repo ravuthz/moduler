@@ -53,89 +53,50 @@ public class ModulerApplication implements CommandLineRunner {
         initRoles();
         initPermissions();
 
-        List<Permission> permissionList = getPermissionList();
-        List<Role> roleList = getRoleList();
-        List<User> userList = getUserList();
-
-        Role userRole = roleRepository.findByName("USER");
-        Role adminRole = roleRepository.findByName("ADMIN");
-        Role clientRole = roleRepository.findByName("CLIENT");
-
-        User user = userRepository.findByUsername("ravuthz");
-        User admin = userRepository.findByUsername("adminz");
-        User client = userRepository.findByUsername("clientz");
-
+        log.debug("Start assign permissions to roles ...");
         Permission viewApp = permissionRepository.findByName("VIEW_APP");
         Permission createApp = permissionRepository.findByName("CREATE_APP");
         Permission updateApp = permissionRepository.findByName("UPDATE_APP");
         Permission deleteApp = permissionRepository.findByName("DELETE_APP");
 
-        log.debug("Start apply permissions to roles ...");
-        userRole.getPermissions().add(viewApp);
-        adminRole.getPermissions().add(viewApp);
-        adminRole.getPermissions().add(createApp);
-        adminRole.getPermissions().add(updateApp);
-        adminRole.getPermissions().add(deleteApp);
-        clientRole.getPermissions().add(viewApp);
-        clientRole.getPermissions().add(createApp);
-        clientRole.getPermissions().add(updateApp);
-        roleRepository.save(Arrays.asList(userRole, adminRole, clientRole));
-
-        userRole = roleRepository.findByName("USER");
-        adminRole = roleRepository.findByName("ADMIN");
-        clientRole = roleRepository.findByName("CLIENT");
+        assignPermissionsToRole("USER", Arrays.asList(viewApp));
+        assignPermissionsToRole("ADMIN", Arrays.asList(viewApp, createApp, updateApp, deleteApp));
+        assignPermissionsToRole("CLIENT", Arrays.asList(viewApp, createApp, updateApp));
 
         log.debug("Start assign roles to users ...");
-        user.getRoles().add(userRole);
-        admin.getRoles().add(adminRole);
-        client.getRoles().add(clientRole);
+        assignRoleToUser("USER", "ravuthz");
+        assignRoleToUser("ADMIN", "adminz");
+        assignRoleToUser("CLIENT", "clientz");
 
-        userRepository.save(Arrays.asList(user, admin, client));
+        log.debug("Check all permissions ...");
+        List<Permission> permissionList = (List<Permission>) permissionRepository.findAll();
+        permissionList.forEach(item -> log.debug(item.toString()));
 
-//        log.debug("Check all roles ...");
-//        log.debug(userRole.toString());
-//        log.debug(adminRole.toString());
-//        log.debug(clientRole.toString());
-//
-//        log.debug("Check all users ...");
-//        log.debug(user.toString());
-//        log.debug(admin.toString());
-//        log.debug(client.toString());
-//
-//        log.debug("Check all permissions ...");
-//        log.debug(viewApp.toString());
-//        log.debug(createApp.toString());
-//        log.debug(updateApp.toString());
-//        log.debug(deleteApp.toString());
+        log.debug("Check all roles ...");
+        List<Role> roleList = (List<Role>) roleRepository.findAll();
+        roleList.forEach(item -> log.debug(item.toString()));
 
-//        List<Permission> permissionList = (List<Permission>) permissionRepository.findAll();
-//        permissionList.forEach(item -> log.debug(item.toString()));
-//
-//        List<Role> roleList = (List<Role>) roleRepository.findAll();
-//        roleList.forEach(item -> log.debug(item.toString()));
-//
-//        List<User> userList = (List<User>) userRepository.findAll();
-//        userList.forEach(item -> log.debug(item.toString()));
+        log.debug("Check all users ...");
+        List<User> userList = (List<User>) userRepository.findAll();
+        userList.forEach(item -> log.debug(item.toString()));
     }
 
     private void initRoles() {
         log.debug("Start creating roles ...");
-        List<Role> roleList = Arrays.asList(
+        roleRepository.save(Arrays.asList(
                 new Role("USER", "Role as user"),
                 new Role("ADMIN", "Role as admin"),
                 new Role("CLIENT", "Role as client")
-        );
-        roleRepository.save(roleList);
+        ));
     }
 
     private void initUsers() {
         log.debug("Start creating users ...");
-        List<User> userList = Arrays.asList(
+        userRepository.save(Arrays.asList(
                 User.staticUser("ravuthz", "yo"),
                 User.staticUser("adminz", "yes"),
                 User.staticUser("clientz", "trusted")
-        );
-        userRepository.save(userList);
+        ));
     }
 
     private void initPermissions() {
@@ -148,29 +109,27 @@ public class ModulerApplication implements CommandLineRunner {
         ));
     }
 
-    private List<Role> getRoleList() {
-        return Arrays.asList(
-                roleRepository.findByName("USER"),
-                roleRepository.findByName("ADMIN"),
-                roleRepository.findByName("CLIENT")
-        );
+    private void assignPermissionsToRole(String name, List<Permission> permissions) {
+        Role role = roleRepository.findByName(name);
+        if (role != null) {
+            permissions.forEach(permission -> {
+                permission.setRole(role);
+                permissionRepository.save(permission);
+            });
+//            permissions.forEach(role.getPermissions()::add);
+//            roleRepository.save(role);
+        }
     }
 
-    private List<User> getUserList() {
-        return Arrays.asList(
-                userRepository.findByUsername("ravuthz"),
-                userRepository.findByUsername("adminz"),
-                userRepository.findByUsername("clientz")
-        );
-    }
-
-    private List<Permission> getPermissionList() {
-        return Arrays.asList(
-                permissionRepository.findByName("VIEW_APP"),
-                permissionRepository.findByName("CREATE_APP"),
-                permissionRepository.findByName("UPDATE_APP"),
-                permissionRepository.findByName("DELETE_APP")
-        );
+    private void assignRoleToUser(String roleName, String userName) {
+        Role role = roleRepository.findByName(roleName);
+        User user = userRepository.findByUsername(userName);
+        if (user != null) {
+            user.getRoles().add(role);
+            userRepository.save(user);
+            role.getUsers().add(user);
+            roleRepository.save(role);
+        }
     }
 
 }
