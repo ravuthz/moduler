@@ -59,9 +59,12 @@ public class ModulerApplication implements CommandLineRunner {
         Permission updateApp = permissionRepository.findByName("UPDATE_APP");
         Permission deleteApp = permissionRepository.findByName("DELETE_APP");
 
-        assignPermissionsToRole("USER", Arrays.asList(viewApp));
-        assignPermissionsToRole("ADMIN", Arrays.asList(viewApp, createApp, updateApp, deleteApp));
-        assignPermissionsToRole("CLIENT", Arrays.asList(viewApp, createApp, updateApp));
+        Permission viewApi = permissionRepository.findByName("VIEW_API");
+        Permission crudApi = permissionRepository.findByName("CRUD_API");
+
+        assignPermissionsToRole("USER", Arrays.asList(viewApi, viewApp));
+        assignPermissionsToRole("ADMIN", Arrays.asList(viewApi, viewApp, createApp, updateApp, deleteApp));
+        assignPermissionsToRole("CLIENT", Arrays.asList(viewApi, crudApi, viewApp, createApp, updateApp));
 
         log.debug("Start assign roles to users ...");
         assignRoleToUser("USER", "ravuthz");
@@ -92,10 +95,17 @@ public class ModulerApplication implements CommandLineRunner {
     private void initPermissions() {
         log.debug("Start creating permissions ...");
         permissionRepository.save(Arrays.asList(
+                new Permission("CRUD_APP", "Can crud on application"),
                 new Permission("VIEW_APP", "Can list and show application"),
                 new Permission("CREATE_APP", "Can create application"),
                 new Permission("UPDATE_APP", "Can update application"),
-                new Permission("DELETE_APP", "Can delete application")
+                new Permission("DELETE_APP", "Can delete application"),
+
+                new Permission("CRUD_API", "Can management on api with full access"),
+                new Permission("VIEW_API", "Can view and list all api"),
+                new Permission("CREATE_API", "Can create api"),
+                new Permission("UPDATE_API", "Can update api"),
+                new Permission("DELETE_API", "Can delete api")
         ));
     }
 

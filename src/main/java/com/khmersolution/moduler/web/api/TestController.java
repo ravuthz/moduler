@@ -23,39 +23,46 @@ import java.security.Principal;
 @RequestMapping("/rest/api")
 public class TestController {
 
+    /*
+    hasRole()
+    hasAuthority()
+    hasPermission()
+     */
+
     @GetMapping(value = "/")
     public RestMsg index() {
         return new RestMsg("Hello World!");
     }
 
     @GetMapping(value = "/test")
+    @PreAuthorize("hasAuthority('VIEW_API')")
     public RestMsg apiTest() {
         return new RestMsg("Hello apiTest!");
     }
 
     @GetMapping(value = "/hello", produces = "application/json")
+    @PreAuthorize("hasAuthority('VIEW_API')")
     public RestMsg helloUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return new RestMsg(String.format("Hello '%s'!", username));
     }
 
     @GetMapping(value = "/auth")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('VIEW_API')")
     public RestMsg helloAuth(Principal principal) {
         log.info("login user: " + principal.getName().toString());
         return new RestMsg(String.format("Welcome '%s'!", principal.getName()));
     }
 
     @GetMapping(value = "/user")
-    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN') or hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('VIEW_API')")
     public RestMsg helloUser(Principal principal) {
         log.info("login user: " + principal.getName().toString());
         return new RestMsg(String.format("Welcome '%s'!", principal.getName()));
     }
 
-
     @GetMapping(value = "/admin")
-    @PreAuthorize("hasAuthority('ADMIN') or hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('VIEW_API')")
     public RestMsg helloAdmin(Principal principal) {
         log.info("login user: " + principal.getName().toString());
         return new RestMsg(String.format("Welcome '%s'!", principal.getName()));
@@ -65,6 +72,12 @@ public class TestController {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class RestMsg {
+        private String message;
+    }
+
+    @Data
+    class ApiResponse {
+        private String status;
         private String message;
     }
 
