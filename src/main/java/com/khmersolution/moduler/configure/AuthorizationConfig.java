@@ -62,7 +62,7 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
                 .withClient("trusted-app")
                 .secret("secret")
                 .authorizedGrantTypes("client_credentials", "password", "refresh_token")
-                .authorities("TRUSTED_CLIENT")
+//                .authorities("TRUSTED_CLIENT")
                 .scopes("read", "write")
                 .resourceIds(resourceId)
                 .accessTokenValiditySeconds(accessTokenValiditySeconds)

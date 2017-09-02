@@ -51,22 +51,19 @@ public class TestControllerTest implements RestTemplateHolder {
 //        resourceDetails.setClientSecret("secret");
         resourceDetails.setGrantType("password");
 
-        try {
 
-            DefaultOAuth2ClientContext clientContext = new DefaultOAuth2ClientContext();
+        DefaultOAuth2ClientContext clientContext = new DefaultOAuth2ClientContext();
 
-            OAuth2RestTemplate restTemplate = new OAuth2RestTemplate(resourceDetails, clientContext);
-            restTemplate.setMessageConverters(Arrays.asList(new MappingJackson2HttpMessageConverter()));
+        OAuth2RestTemplate restTemplate = new OAuth2RestTemplate(resourceDetails, clientContext);
+        restTemplate.setMessageConverters(Arrays.asList(new MappingJackson2HttpMessageConverter()));
 
-            System.out.println("access_token => " + restTemplate.getAccessToken());
+        System.out.println("access_token => " + restTemplate.getAccessToken());
 
-            final TestController.RestMsg message = restTemplate.getForObject(host + "/", TestController.RestMsg.class);
+        final TestController.RestMsg message = restTemplate.getForObject(host + "/", TestController.RestMsg.class);
 
-            System.out.println(message);
+        System.out.println(message);
 
-        } catch (Exception ex) {
-            System.out.println("e1: " + ex.getMessage() + "\n" + ex.getStackTrace());
-        }
+
     }
 
     @Test
@@ -74,16 +71,13 @@ public class TestControllerTest implements RestTemplateHolder {
         AdminDetails adminDetails = new AdminDetails(this);
         DefaultOAuth2ClientContext clientContext = new DefaultOAuth2ClientContext();
 
-        try {
-            OAuth2RestTemplate restTemplate = new OAuth2RestTemplate(adminDetails, clientContext);
-            restTemplate.setMessageConverters(Arrays.asList(new MappingJackson2HttpMessageConverter()));
+        OAuth2RestTemplate restTemplate = new OAuth2RestTemplate(adminDetails, clientContext);
+        restTemplate.setMessageConverters(Arrays.asList(new MappingJackson2HttpMessageConverter()));
 
-            final TestController.RestMsg message = restTemplate.getForObject(host + "/", TestController.RestMsg.class);
+        final TestController.RestMsg message = restTemplate.getForObject(host + "/", TestController.RestMsg.class);
 
-            System.out.println(message);
-        } catch (Exception ex) {
-            System.out.println("e1: " + ex.getMessage() + "\n" + ex.getStackTrace());
-        }
+        System.out.println(message);
+
     }
 
     @Test
