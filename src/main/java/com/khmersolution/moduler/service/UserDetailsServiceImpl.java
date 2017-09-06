@@ -57,17 +57,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         for (Permission item : permissionList) {
             permission.add(item.getName());
         }
-        log.debug("getPermissions(): \n" + permission.toString());
         return permission;
     }
 
     private List<GrantedAuthority> getGrantedAuthorities(List<String> permissions) {
         List<GrantedAuthority> authorities = new ArrayList<>();
         for (String permission : permissions) {
-            log.debug(permission);
             authorities.add(new SimpleGrantedAuthority(permission));
         }
-        log.debug("getGrantedAuthorities: \n" + authorities);
         return authorities;
     }
 

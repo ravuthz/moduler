@@ -41,19 +41,15 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints
-                .authenticationManager(authenticationManager)
-                .tokenServices(tokenServices())
                 .tokenStore(tokenStore())
+                .tokenServices(tokenServices())
+                .authenticationManager(authenticationManager)
                 .accessTokenConverter(accessTokenConverter());
     }
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
-        oauthServer
-                .tokenKeyAccess("permitAll()")
-                .checkTokenAccess("isAuthenticated()");
-//                .tokenKeyAccess("hasAuthority('TRUSTED_CLIENT')")
-//                .checkTokenAccess("hasAuthority('TRUSTED_CLIENT')");
+        oauthServer.tokenKeyAccess("permitAll()").checkTokenAccess("isAuthenticated()");
     }
 
     @Override
@@ -62,16 +58,11 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
                 .withClient("trusted-app")
                 .secret("secret")
                 .authorizedGrantTypes("client_credentials", "password", "refresh_token")
-//                .authorities("TRUSTED_CLIENT")
+                .authorities("TRUSTED_CLIENT")
                 .scopes("read", "write")
                 .resourceIds(resourceId)
                 .accessTokenValiditySeconds(accessTokenValiditySeconds)
                 .refreshTokenValiditySeconds(refreshTokenValiditySeconds);
-    }
-
-    @Bean
-    public TokenStore tokenStore() {
-        return new JwtTokenStore(accessTokenConverter());
     }
 
     @Bean
@@ -81,6 +72,11 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
                 new KeyStoreKeyFactory(new ClassPathResource("mykeys.jks"), "mypass".toCharArray());
         converter.setKeyPair(keyStoreKeyFactory.getKeyPair("mykeys"));
         return converter;
+    }
+
+    @Bean
+    public TokenStore tokenStore() {
+        return new JwtTokenStore(accessTokenConverter());
     }
 
     @Bean
