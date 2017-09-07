@@ -1,0 +1,17 @@
+spring:
+    datasource:
+        driver-class-name: org.h2.Driver
+        maxActive: 5
+        password: ''
+        url: jdbc:h2:file:~/test;DB_CLOSE_ON_EXIT=FALSE
+        username: sa
+    h2:
+        console:
+            enabled: true
+            path: /h2
+    jpa:
+        hibernate:
+            ddl-auto: create-drop
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.H2Dialect

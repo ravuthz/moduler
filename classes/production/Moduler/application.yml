@@ -1,0 +1,58 @@
+#logging:
+#    level:
+#        com:
+#            khmersolution:
+#                moduler: DEBUG
+#        org:
+#            hibernate:
+#                SQL: debug
+#                type:
+#                    descriptor:
+#                        sql: trace
+#    pattern:
+#        console: '%clr(%d{HH:mm:ss}){magenta} %-5level - %clr(%msg%n){cyan}'
+#        file: '%d{yyyy-MMM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{15} - %msg%n'
+security:
+    oauth2:
+        resourceId: oauth2-jwt-resource
+        basePath: /oauth
+server:
+    port: ${PORT:8080}
+spring:
+    data:
+        rest:
+            basePath: /rest/api
+    datasource:
+        driverClassName: org.postgresql.Driver
+        maxActive: 5
+        password: postgres
+        url: jdbc:postgresql://localhost:5432/postgres
+        username: postgres
+    jpa:
+        hibernate:
+            ddl-auto: create
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.PostgreSQLDialect
+                formatSql: false
+        showSql: false
+###### Custom Swagger Properties
+swagger:
+    apiInfo:
+        contactEmail: ravuthz@gmail.com
+        contactName: ravuthz@gmail.com
+        contactUrl: http://github.com/ravuthz/user-management-api
+        description: Users Restful API with Spring Boot + Spring Data + Spring Rest.
+        license: License of API
+        licenseUrl: http://github.com/ravuthz/user-management-api
+        termOfServiceUrl:
+        title: User Management API
+        version: 1.0.0
+    defaultKey:
+        page: page
+        size: size
+        sort: sort
+    defaultValue:
+        page: 0
+        size: 20
+        sort: id,desc

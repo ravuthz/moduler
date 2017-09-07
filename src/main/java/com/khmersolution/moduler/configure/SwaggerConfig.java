@@ -1,5 +1,6 @@
 package com.khmersolution.moduler.configure;
 
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,11 +10,12 @@ import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.schema.ModelRef;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
-import springfox.documentation.service.Parameter;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger.web.ApiKeyVehicle;
+import springfox.documentation.swagger.web.SecurityConfiguration;
 import springfox.documentation.swagger.web.UiConfiguration;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
@@ -30,6 +32,11 @@ import java.util.List;
 @EnableSwagger2
 @Import({springfox.documentation.spring.data.rest.configuration.SpringDataRestConfiguration.class})
 public class SwaggerConfig {
+
+    public static final String AUTHORIZATION = "AUTHORIZATION";
+
+    @Value("${spring.data.rest.basePath:}/**")
+    private String basePath;
 
     @Value("${swagger.apiInfo.title:}")
     private String title;
@@ -92,10 +99,12 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.ant("/rest/**"))
+                .paths(PathSelectors.ant(basePath))
                 .build()
                 .globalOperationParameters(parameterList)
-                .apiInfo(apiInfoBuilder());
+                .apiInfo(apiInfoBuilder())
+                .securityContexts(Lists.newArrayList(securityContext()))
+                .securitySchemes(Lists.newArrayList(apiKey()));
     }
 
     @Bean
@@ -103,12 +112,26 @@ public class SwaggerConfig {
         return new UiConfiguration(
                 "validatorUrl",
                 "none",
-                "method",
+                "alpha",
                 "schema",
                 UiConfiguration.Constants.DEFAULT_SUBMIT_METHODS,
                 false,
                 false,
                 60000L);
+    }
+
+    @Bean
+    SecurityConfiguration security() {
+        return new SecurityConfiguration(
+                null,
+                null,
+                null,
+                null,
+                "Bearer access_token",
+                ApiKeyVehicle.HEADER,
+                AUTHORIZATION,
+                ","
+        );
     }
 
     private ApiInfo apiInfoBuilder() {
@@ -131,5 +154,23 @@ public class SwaggerConfig {
                 .parameterType(type)
                 .modelRef(modelRef)
                 .required(required).build();
+    }
+
+    private ApiKey apiKey() {
+        return new ApiKey(AUTHORIZATION, "api_key", "header");
+    }
+
+    private List<SecurityReference> defaultAuth() {
+        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
+        authorizationScopes[0] = new AuthorizationScope("global", "accessEverything");
+        return Lists.newArrayList(new SecurityReference(AUTHORIZATION, authorizationScopes));
+    }
+
+    private SecurityContext securityContext() {
+        return SecurityContext
+                .builder()
+                .securityReferences(defaultAuth())
+                .forPaths(PathSelectors.any())
+                .build();
     }
 }
