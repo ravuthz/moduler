@@ -15,9 +15,9 @@
 security:
     oauth2:
         resourceId: oauth2-jwt-resource
-        basePath: /oauth
 server:
     port: ${PORT:8080}
+    contextPath: /user-management
 spring:
     data:
         rest:
@@ -43,9 +43,9 @@ swagger:
         contactName: ravuthz@gmail.com
         contactUrl: http://github.com/ravuthz/user-management-api
         description: Users Restful API with Spring Boot + Spring Data + Spring Rest.
-        license: License of API
-        licenseUrl: http://github.com/ravuthz/user-management-api
-        termOfServiceUrl:
+        license: Apache 2.0
+        licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.html
+        termOfServiceUrl: http://swagger.io/terms/
         title: User Management API
         version: 1.0.0
     defaultKey:

@@ -35,9 +35,6 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
     @Autowired
     private DefaultTokenServices tokenServices;
 
-    // To allow the rResourceServerConfigurerAdapter to understand the token,
-    // it must share the same characteristics with AuthorizationServerConfigurerAdapter.
-    // So, we must wire it up the beans in the ResourceServerSecurityConfigurer.
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) {
         resources
@@ -52,25 +49,45 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
                 .requestMatcher(new OAuthRequestedMatcher())
                 .csrf().disable()
                 .anonymous().disable()
-                .authorizeRequests().anyRequest().authenticated();
-//                .antMatchers(HttpMethod.OPTIONS).permitAll()
-//                .antMatchers("/rest/api/user").access("hasAnyRole('USER')")
-//                .antMatchers("/rest/api/admin").hasRole("ADMIN")
-//                .antMatchers("/rest/api/**").authenticated();
+                .formLogin().disable()
+                .httpBasic().disable()
+                .authorizeRequests()
+
+                .antMatchers(
+                        "/",
+                        "/v2/api-docs",
+                        "/swagger-resources",
+                        "/configuration/ui",
+                        "/configuration/security",
+                        "/swagger-ui.html",
+                        "/webjars/**"
+                ).permitAll()
+
+                .anyRequest().authenticated();
     }
 
     private static class OAuthRequestedMatcher implements RequestMatcher {
         public boolean matches(HttpServletRequest request) {
-            // Determine if the resource called is "/api/**"
-            String api = "/rest/api/";
-            int length = api.length();
-            String path = request.getServletPath();
-            if (path.length() >= length) {
-                path = path.substring(0, length);
-                boolean isApi = path.equals(api);
-                return isApi;
-            }
-            return false;
+            String auth = request.getHeader("Authorization");
+            System.out.println("auth: " + auth);
+            // Determine if the client request contained an OAuth Authorization
+            boolean haveOauth2Token = (auth != null) && auth.startsWith("Bearer");
+            boolean haveAccessToken = request.getParameter("access_token") != null;
+            return haveOauth2Token || haveAccessToken;
         }
     }
+
+//    private static class OAuthRequestedMatcher implements RequestMatcher {
+//        public boolean matches(HttpServletRequest request) {
+//            String api = "/rest/api/";
+//            int length = api.length();
+//            String path = request.getServletPath();
+//            if (path.length() >= length) {
+//                path = path.substring(0, length);
+//                boolean isApi = path.equals(api);
+//                return isApi;
+//            }
+//            return false;
+//        }
+//    }
 }

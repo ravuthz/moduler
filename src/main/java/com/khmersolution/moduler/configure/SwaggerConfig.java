@@ -14,12 +14,11 @@ import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger.web.ApiKeyVehicle;
-import springfox.documentation.swagger.web.SecurityConfiguration;
 import springfox.documentation.swagger.web.UiConfiguration;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -34,9 +33,8 @@ import java.util.List;
 public class SwaggerConfig {
 
     public static final String AUTHORIZATION = "AUTHORIZATION";
-
-    @Value("${spring.data.rest.basePath:}/**")
-    private String basePath;
+    private static final String securitySchemaOAuth2 = "basic";
+    private static final String authorizationTokenURL = "http://localhost:8080/oauth/token";
 
     @Value("${swagger.apiInfo.title:}")
     private String title;
@@ -55,7 +53,6 @@ public class SwaggerConfig {
 
     @Value("${swagger.apiInfo.contactName:}")
     private String contactName;
-
     @Value("${swagger.apiInfo.contactEmail:}")
     private String contactEmail;
 
@@ -67,14 +64,17 @@ public class SwaggerConfig {
 
     @Value("${swagger.defaultKey.page:page}")
     private String pageKey;
+
     private String pageDescription = "Pagination's page number start by index";
 
     @Value("${swagger.defaultKey.size:size}")
     private String sizeKey;
+
     private String sizeDescription = "Pagination's items per page";
 
     @Value("${swagger.defaultKey.sort:sort}")
     private String sortKey;
+
     private String sortDescription = "Pagination's sort item by field";
 
     @Value("${swagger.defaultValue.page:0}")
@@ -98,19 +98,19 @@ public class SwaggerConfig {
 
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.ant(basePath))
+                .apis(RequestHandlerSelectors.basePackage(Package.REST))
+                .paths(PathSelectors.any())
                 .build()
                 .globalOperationParameters(parameterList)
                 .apiInfo(apiInfoBuilder())
                 .securityContexts(Lists.newArrayList(securityContext()))
-                .securitySchemes(Lists.newArrayList(apiKey()));
+                .securitySchemes(Collections.singletonList(securitySchema()));
     }
 
     @Bean
     UiConfiguration uiConfig() {
         return new UiConfiguration(
-                "validatorUrl",
+                null,
                 "none",
                 "alpha",
                 "schema",
@@ -118,20 +118,6 @@ public class SwaggerConfig {
                 false,
                 false,
                 60000L);
-    }
-
-    @Bean
-    SecurityConfiguration security() {
-        return new SecurityConfiguration(
-                null,
-                null,
-                null,
-                null,
-                "Bearer access_token",
-                ApiKeyVehicle.HEADER,
-                AUTHORIZATION,
-                ","
-        );
     }
 
     private ApiInfo apiInfoBuilder() {
@@ -156,13 +142,24 @@ public class SwaggerConfig {
                 .required(required).build();
     }
 
-    private ApiKey apiKey() {
-        return new ApiKey(AUTHORIZATION, "api_key", "header");
+    private OAuth securitySchema() {
+        List<AuthorizationScope> authorizationScopeList = Arrays.asList(
+                new AuthorizationScope(AuthorizationConfig.SCOPE_READ, AuthorizationConfig.SCOPE_READ_DESC),
+                new AuthorizationScope(AuthorizationConfig.SCOPE_WRITE, AuthorizationConfig.SCOPE_WRITE_DESC)
+        );
+
+        ResourceOwnerPasswordCredentialsGrant resourceOwnerPasswordCredentialsGrant = new ResourceOwnerPasswordCredentialsGrant(authorizationTokenURL);
+        List<GrantType> grantTypes = Collections.singletonList(resourceOwnerPasswordCredentialsGrant);
+
+        OAuth oAuth = new OAuth(AUTHORIZATION, authorizationScopeList, grantTypes);
+        return oAuth;
     }
 
     private List<SecurityReference> defaultAuth() {
-        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
-        authorizationScopes[0] = new AuthorizationScope("global", "accessEverything");
+        AuthorizationScope[] authorizationScopes = new AuthorizationScope[]{
+                new AuthorizationScope(AuthorizationConfig.SCOPE_READ, AuthorizationConfig.SCOPE_READ_DESC),
+                new AuthorizationScope(AuthorizationConfig.SCOPE_WRITE, AuthorizationConfig.SCOPE_WRITE_DESC)
+        };
         return Lists.newArrayList(new SecurityReference(AUTHORIZATION, authorizationScopes));
     }
 

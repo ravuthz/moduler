@@ -29,6 +29,11 @@ import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFacto
 @SuppressWarnings("SpringJavaAutowiringInspection")
 public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 
+    public static final String SCOPE_READ = "read";
+    public static final String SCOPE_WRITE = "write";
+    public static final String SCOPE_READ_DESC = "Can read only";
+    public static final String SCOPE_WRITE_DESC = "Can write only";
+
     @Value("${security.oauth2.resourceId}")
     private String resourceId;
 
@@ -49,7 +54,9 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
-        oauthServer.tokenKeyAccess("permitAll()").checkTokenAccess("isAuthenticated()");
+        oauthServer
+//                .tokenKeyAccess("permitAll()")
+                .checkTokenAccess("isAuthenticated()");
     }
 
     @Override
@@ -59,7 +66,7 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
                 .secret("secret")
                 .authorizedGrantTypes("client_credentials", "password", "refresh_token")
                 .authorities("TRUSTED_CLIENT")
-                .scopes("read", "write")
+                .scopes(SCOPE_READ, SCOPE_WRITE)
                 .resourceIds(resourceId)
                 .accessTokenValiditySeconds(accessTokenValiditySeconds)
                 .refreshTokenValiditySeconds(refreshTokenValiditySeconds);
