@@ -53,16 +53,14 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
                 .httpBasic().disable()
                 .authorizeRequests()
 
-                .antMatchers(
-                        "/",
-                        "/v2/api-docs",
-                        "/swagger-resources",
-                        "/configuration/ui",
-                        "/configuration/security",
-                        "/swagger-ui.html",
-                        "/webjars/**",
-                        "/rest/**"
-                ).permitAll()
+                .antMatchers("/").permitAll()
+                .antMatchers("/v2/api-docs").permitAll()
+                .antMatchers("/swagger-resources").permitAll()
+                .antMatchers("/configuration/ui").permitAll()
+                .antMatchers("/configuration/security").permitAll()
+                .antMatchers("/swagger-ui.html").permitAll()
+                .antMatchers("/webjars/**").permitAll()
+                .antMatchers("/rest/api/**").permitAll()
 
                 .anyRequest().authenticated();
     }
