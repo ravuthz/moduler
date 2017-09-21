@@ -45,15 +45,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().disable()
                 .httpBasic().and()
                 .authorizeRequests()
-//                .antMatchers(
-//                        "/",
-//                        "/v2/api-docs",
-//                        "/swagger-resources",
-//                        "/configuration/ui",
-//                        "/configuration/security",
-//                        "/swagger-ui.html",
-//                        "/webjars/**"
-//                ).permitAll()
+
+               .antMatchers(
+                       "/",
+                       "/v2/api-docs",
+                       "/swagger-resources",
+                       "/configuration/ui",
+                       "/configuration/security",
+                       "/swagger-ui.html",
+                       "/webjars/**",
+                       "/rest/**"
+               ).permitAll()
 
                 .anyRequest().authenticated();
     }

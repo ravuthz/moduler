@@ -60,7 +60,8 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
                         "/configuration/ui",
                         "/configuration/security",
                         "/swagger-ui.html",
-                        "/webjars/**"
+                        "/webjars/**",
+                        "/rest/**"
                 ).permitAll()
 
                 .anyRequest().authenticated();

@@ -65,8 +65,3 @@ swagger:
         page: 0
         size: 20
         sort: id,desc
-
-endpoints:
-    cors:
-        allowed-origins: *
-        allowed-methods: GET,PUT,POST,PATCH,DELETE
