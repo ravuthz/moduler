@@ -62,9 +62,9 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
                         "/swagger-ui.html",
                         "/webjars/**",
                         "/rest/**"
-                ).permitAll()
+                ).permitAll();
 
-                .anyRequest().authenticated();
+//                .anyRequest().authenticated();
     }
 
     private static class OAuthRequestedMatcher implements RequestMatcher {

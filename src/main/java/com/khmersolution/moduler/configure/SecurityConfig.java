@@ -43,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .anonymous().disable()
                 .formLogin().disable()
-                .httpBasic().and()
+//                .httpBasic().and()
                 .authorizeRequests()
 
                .antMatchers(
@@ -55,9 +55,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                        "/swagger-ui.html",
                        "/webjars/**",
                        "/rest/**"
-               ).permitAll()
+               ).permitAll();
 
-                .anyRequest().authenticated();
+//                .anyRequest().authenticated();
     }
 
     @Override
