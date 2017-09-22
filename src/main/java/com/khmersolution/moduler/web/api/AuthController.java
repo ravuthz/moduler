@@ -1,6 +1,7 @@
 package com.khmersolution.moduler.web.api;
 
 import com.khmersolution.moduler.configure.Route;
+import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ import java.security.Principal;
 @Slf4j
 @RestController
 @RequestMapping(Route.OAUTH_TEST)
+@Api(value = "AuthController", description = "Auth restful resource  with rest controller", tags = "Custom AuthController")
 public class AuthController {
 
     @GetMapping(value = Route.HELLO_WEB)
@@ -33,7 +35,7 @@ public class AuthController {
     @GetMapping(value = Route.AUTH)
     @PreAuthorize("hasAuthority('VIEW_API')")
     public AuthResponse helloAuth(Principal principal) {
-        log.info("login user: " + principal.getName().toString());
+        log.info("login user: " + principal.getName());
         printAuthenticationDetails();
         return new AuthResponse(String.format("Welcome '%s'!", principal.getName()));
     }
@@ -41,7 +43,7 @@ public class AuthController {
     @GetMapping(value = Route.USER)
     @PreAuthorize("hasAuthority('VIEW_API')")
     public AuthResponse helloUser(Principal principal) {
-        log.info("login user: " + principal.getName().toString());
+        log.info("login user: " + principal.getName());
         printAuthenticationDetails();
         return new AuthResponse(String.format("Welcome '%s'!", principal.getName()));
     }
@@ -49,7 +51,7 @@ public class AuthController {
     @GetMapping(value = Route.ADMIN)
     @PreAuthorize("hasAuthority('VIEW_API')")
     public AuthResponse helloAdmin(Principal principal) {
-        log.info("login user: " + principal.getName().toString());
+        log.info("login user: " + principal.getName());
         printAuthenticationDetails();
         return new AuthResponse(String.format("Welcome '%s'!", principal.getName()));
     }
@@ -57,7 +59,7 @@ public class AuthController {
     @GetMapping(value = Route.CLIENT)
     @PreAuthorize("hasAuthority('VIEW_API')")
     public AuthResponse helloClient(Principal principal) {
-        log.info("login user: " + principal.getName().toString());
+        log.info("login user: " + principal.getName());
         printAuthenticationDetails();
         return new AuthResponse(String.format("Welcome '%s'!", principal.getName()));
     }

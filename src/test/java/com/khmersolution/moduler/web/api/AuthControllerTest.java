@@ -26,16 +26,14 @@ import static junit.framework.TestCase.assertTrue;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AuthControllerTest implements RestTemplateHolder {
 
+    @Rule
+    public OAuth2ContextSetup context = OAuth2ContextSetup.standard(this);
     @Value("http://localhost:${local.server.port}")
     @Getter
     protected String host;
-
     @Getter
     @Setter
     private RestOperations restTemplate = new RestTemplate();
-
-    @Rule
-    public OAuth2ContextSetup context = OAuth2ContextSetup.standard(this);
 
     @Before
     public void setUp() throws Exception {

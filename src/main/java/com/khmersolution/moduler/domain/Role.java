@@ -2,10 +2,7 @@ package com.khmersolution.moduler.domain;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -26,6 +23,7 @@ import java.util.List;
 @Table(name = "roles")
 @ApiModel(value = "Role")
 @ToString(exclude = "users")
+@EqualsAndHashCode(callSuper = true)
 public class Role extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = -5403723535622562579L;

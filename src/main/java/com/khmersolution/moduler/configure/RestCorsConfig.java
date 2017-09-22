@@ -6,9 +6,14 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-@Configuration
-public class RestConfig {
+/**
+ * Created by Vannaravuth Yo
+ * Date : 9/16/2017, 11:58 AM
+ * Email : ravuthz@gmail.com
+ */
 
+@Configuration
+public class RestCorsConfig {
     @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -26,4 +31,3 @@ public class RestConfig {
     }
 
 }
-

@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -14,12 +16,16 @@ import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger.web.ApiKeyVehicle;
+import springfox.documentation.swagger.web.SecurityConfiguration;
 import springfox.documentation.swagger.web.UiConfiguration;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import static com.google.common.base.Predicates.or;
 
 /**
  * Created by Vannaravuth Yo
@@ -53,6 +59,7 @@ public class SwaggerConfig {
 
     @Value("${swagger.apiInfo.contactName:}")
     private String contactName;
+
     @Value("${swagger.apiInfo.contactEmail:}")
     private String contactEmail;
 
@@ -98,7 +105,13 @@ public class SwaggerConfig {
 
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage(Package.REST))
+                .apis(
+                        or(
+                                RequestHandlerSelectors.withClassAnnotation(Repository.class),
+                                RequestHandlerSelectors.withClassAnnotation(RestController.class),
+                                RequestHandlerSelectors.basePackage("org.springframework.security.oauth2.provider.endpoint")
+                        )
+                )
                 .paths(PathSelectors.any())
                 .build()
                 .globalOperationParameters(parameterList)
@@ -118,6 +131,20 @@ public class SwaggerConfig {
                 false,
                 false,
                 60000L);
+    }
+
+    @Bean
+    SecurityConfiguration security() {
+        return new SecurityConfiguration(
+                null,
+                null,
+                null,
+                null,
+                "Bearer access_token",
+                ApiKeyVehicle.HEADER,
+                AUTHORIZATION,
+                ","
+        );
     }
 
     private ApiInfo apiInfoBuilder() {
@@ -151,8 +178,7 @@ public class SwaggerConfig {
         ResourceOwnerPasswordCredentialsGrant resourceOwnerPasswordCredentialsGrant = new ResourceOwnerPasswordCredentialsGrant(authorizationTokenURL);
         List<GrantType> grantTypes = Collections.singletonList(resourceOwnerPasswordCredentialsGrant);
 
-        OAuth oAuth = new OAuth(AUTHORIZATION, authorizationScopeList, grantTypes);
-        return oAuth;
+        return new OAuth(AUTHORIZATION, authorizationScopeList, grantTypes);
     }
 
     private List<SecurityReference> defaultAuth() {
@@ -170,4 +196,5 @@ public class SwaggerConfig {
                 .forPaths(PathSelectors.any())
                 .build();
     }
+
 }

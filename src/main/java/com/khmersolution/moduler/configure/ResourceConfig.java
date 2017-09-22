@@ -46,7 +46,9 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
-                .requestMatcher(new OAuthRequestedMatcher())
+//                .requestMatcher(new OAuthRequestedMatcher())
+                .requestMatchers().and()
+                .cors().and()
                 .csrf().disable()
                 .anonymous().disable()
                 .formLogin().disable()
@@ -60,7 +62,8 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
                         "/configuration/ui",
                         "/configuration/security",
                         "/swagger-ui.html",
-                        "/webjars/**"
+                        "/webjars/**",
+                        "/rest/api/**"
                 ).permitAll()
 
                 .anyRequest().authenticated();
@@ -70,6 +73,7 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
         public boolean matches(HttpServletRequest request) {
             String auth = request.getHeader("Authorization");
             System.out.println("auth: " + auth);
+            System.out.println("request: " + request.getServletPath());
             // Determine if the client request contained an OAuth Authorization
             boolean haveOauth2Token = (auth != null) && auth.startsWith("Bearer");
             boolean haveAccessToken = request.getParameter("access_token") != null;
@@ -90,4 +94,5 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
 //            return false;
 //        }
 //    }
+
 }

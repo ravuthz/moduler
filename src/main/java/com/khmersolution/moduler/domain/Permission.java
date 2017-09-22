@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -27,6 +28,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ApiModel(value = "Permission")
+@EqualsAndHashCode(callSuper = true)
 public class Permission extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = -7085459662547835139L;
