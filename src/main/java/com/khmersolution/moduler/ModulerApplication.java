@@ -49,16 +49,6 @@ public class ModulerApplication implements CommandLineRunner {
         SpringApplication.run(ModulerApplication.class, args);
     }
 
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurerAdapter() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins("*");
-            }
-        };
-    }
-
     @Override
     @Transactional
     public void run(String... args) throws Exception {

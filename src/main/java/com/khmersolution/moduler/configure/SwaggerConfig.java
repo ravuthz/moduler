@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -20,6 +22,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import static com.google.common.base.Predicates.or;
 
 /**
  * Created by Vannaravuth Yo
@@ -98,7 +102,13 @@ public class SwaggerConfig {
 
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage(Package.REST))
+                .apis(
+                        or(
+                                RequestHandlerSelectors.withClassAnnotation(Repository.class),
+                                RequestHandlerSelectors.withClassAnnotation(RestController.class),
+                                RequestHandlerSelectors.basePackage("org.springframework.security.oauth2.provider.endpoint")
+                        )
+                )
                 .paths(PathSelectors.any())
                 .build()
                 .globalOperationParameters(parameterList)

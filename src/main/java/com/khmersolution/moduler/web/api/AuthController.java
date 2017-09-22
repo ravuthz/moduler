@@ -1,6 +1,7 @@
 package com.khmersolution.moduler.web.api;
 
 import com.khmersolution.moduler.configure.Route;
+import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ import java.security.Principal;
 @Slf4j
 @RestController
 @RequestMapping(Route.OAUTH_TEST)
+@Api(value = "AuthController", description = "Auth restful resource  with rest controller", tags = "Custom AuthController")
 public class AuthController {
 
     @GetMapping(value = Route.HELLO_WEB)
