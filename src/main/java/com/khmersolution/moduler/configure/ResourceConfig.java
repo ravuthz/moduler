@@ -49,15 +49,18 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
         http
 //                .requestMatcher(new OAuthRequestedMatcher())
 //                .requestMatchers()
+//                .requestMatchers().antMatchers("/**").and()
+//
+                .cors().and().anonymous()
 
-                .requestMatchers().antMatchers("/**")
-                .and().cors()
-                .and().csrf().disable()
-                .anonymous().disable()
-                .formLogin().disable()
-                .httpBasic().disable()
+                .and()
+//                .csrf().disable()
+//                .anonymous().disable()
+//                .formLogin().disable()
+//                .httpBasic().disable()
                 .authorizeRequests()
-
+                
+                // Allow anonymous resource requests
                 .antMatchers(
                         "/",
                         "/v2/api-docs",
@@ -69,6 +72,7 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
                         "/rest/api/**"
                 ).permitAll()
 
+                // Otherwise requests need to be authenticated
                 .anyRequest().authenticated()
 
                 .and().exceptionHandling().authenticationEntryPoint(
