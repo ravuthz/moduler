@@ -16,6 +16,10 @@ import java.util.List;
 
 public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
+    User findByEmailAndEnabledTrue(@Param("email") String email);
+
+    User findByUsernameAndEnabledTrue(@Param("username") String username);
+
     User findByEmail(@Param("email") String email);
 
     User findByUsername(@Param("username") String username);

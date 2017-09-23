@@ -1,17 +1,17 @@
-#logging:
-#    level:
-#        com:
-#            khmersolution:
-#                moduler: DEBUG
-#        org:
-#            hibernate:
-#                SQL: debug
-#                type:
-#                    descriptor:
-#                        sql: trace
-#    pattern:
-#        console: '%clr(%d{HH:mm:ss}){magenta} %-5level - %clr(%msg%n){cyan}'
-#        file: '%d{yyyy-MMM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{15} - %msg%n'
+logging:
+    level:
+        com:
+            khmersolution:
+                moduler: DEBUG
+        org:
+            hibernate:
+                SQL: debug
+                type:
+                    descriptor:
+                        sql: trace
+    pattern:
+        console: '%clr(%d{HH:mm:ss}){magenta} %-5level - %clr(%msg%n){cyan}'
+        file: '%d{yyyy-MMM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{15} - %msg%n'
 security:
     oauth2:
         resourceId: oauth2-jwt-resource

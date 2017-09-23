@@ -13,6 +13,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Created by Vannaravuth Yo
@@ -47,9 +48,11 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http
 //                .requestMatcher(new OAuthRequestedMatcher())
-                .requestMatchers().and()
-                .cors().and()
-                .csrf().disable()
+//                .requestMatchers()
+
+                .requestMatchers().antMatchers("/**")
+                .and().cors()
+                .and().csrf().disable()
                 .anonymous().disable()
                 .formLogin().disable()
                 .httpBasic().disable()
@@ -66,10 +69,14 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
                         "/rest/api/**"
                 ).permitAll()
 
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
+
+                .and().exceptionHandling().authenticationEntryPoint(
+                (request, response, authException) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED))
+        ;
     }
 
-    private static class OAuthRequestedMatcher implements RequestMatcher {
+    private static class OAuthRequestedMatcher1 implements RequestMatcher {
         public boolean matches(HttpServletRequest request) {
             String auth = request.getHeader("Authorization");
             System.out.println("auth: " + auth);
@@ -81,18 +88,17 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
         }
     }
 
-//    private static class OAuthRequestedMatcher implements RequestMatcher {
-//        public boolean matches(HttpServletRequest request) {
-//            String api = "/rest/api/";
-//            int length = api.length();
-//            String path = request.getServletPath();
-//            if (path.length() >= length) {
-//                path = path.substring(0, length);
-//                boolean isApi = path.equals(api);
-//                return isApi;
-//            }
-//            return false;
-//        }
-//    }
+    private static class OAuthRequestedMatcher2 implements RequestMatcher {
+        public boolean matches(HttpServletRequest request) {
+            String api = "/rest/api/";
+            int length = api.length();
+            String path = request.getServletPath();
+            if (path.length() >= length) {
+                path = path.substring(0, length);
+                return path.equals(api);
+            }
+            return false;
+        }
+    }
 
 }
