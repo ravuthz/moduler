@@ -2,6 +2,7 @@ package com.khmersolution.moduler.repository;
 
 import com.khmersolution.moduler.domain.User;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RestResource;
@@ -14,7 +15,11 @@ import java.util.List;
  * Email : ravuthz@gmail.com
  */
 
-public interface UserRepository extends PagingAndSortingRepository<User, Long> {
+public interface UserRepository extends PagingAndSortingRepository<User, Long>, JpaSpecificationExecutor<User> {
+
+    User findByEmailAndEnabledTrue(@Param("email") String email);
+
+    User findByUsernameAndEnabledTrue(@Param("username") String username);
 
     User findByEmail(@Param("email") String email);
 

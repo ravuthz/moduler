@@ -3,10 +3,7 @@ package com.khmersolution.moduler.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -30,6 +27,7 @@ import java.util.List;
 @Table(name = "users")
 @ApiModel(value = "User")
 @ToString(exclude = "roles")
+@EqualsAndHashCode(callSuper = true)
 public class User extends BaseEntity implements Serializable {
 
     public static final BCryptPasswordEncoder ENCODER = new BCryptPasswordEncoder();

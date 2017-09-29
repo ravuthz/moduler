@@ -1,17 +1,17 @@
-#logging:
-#    level:
-#        com:
-#            khmersolution:
-#                moduler: DEBUG
-#        org:
-#            hibernate:
-#                SQL: debug
-#                type:
-#                    descriptor:
-#                        sql: trace
-#    pattern:
-#        console: '%clr(%d{HH:mm:ss}){magenta} %-5level - %clr(%msg%n){cyan}'
-#        file: '%d{yyyy-MMM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{15} - %msg%n'
+logging:
+    level:
+        com:
+            khmersolution:
+                moduler: DEBUG
+        org:
+            hibernate:
+                SQL: debug
+                type:
+                    descriptor:
+                        sql: trace
+    pattern:
+        console: '%clr(%d{HH:mm:ss}){magenta} %-5level - %clr(%msg%n){cyan}'
+        file: '%d{yyyy-MMM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{15} - %msg%n'
 security:
     oauth2:
         resourceId: oauth2-jwt-resource
@@ -22,14 +22,16 @@ spring:
     data:
         rest:
             basePath: /rest/api
+#    datasource:
+#        driverClassName: org.postgresql.Driver
+#        maxActive: 5
+#        password: postgres
+#        url: jdbc:postgresql://localhost:5432/postgres
+#        username: postgres
     datasource:
-        # driverClassName: org.postgresql.Driver
-        # maxActive: 5
-        # password: postgres
-        # url: jdbc:postgresql://localhost:5432/postgres
-        # username: postgres
         driver-class-name: org.h2.Driver
-        password: ''
+        maxActive: 5
+        password:
         url: jdbc:h2:file:~/test;DB_CLOSE_ON_EXIT=FALSE
         username: sa
     h2:
@@ -41,7 +43,7 @@ spring:
             ddl-auto: create
         properties:
             hibernate:
-                # dialect: org.hibernate.dialect.PostgreSLDialect
+#                dialect: org.hibernate.dialect.PostgreSQLDialect
                 dialect: org.hibernate.dialect.H2Dialect
                 formatSql: false
         showSql: false

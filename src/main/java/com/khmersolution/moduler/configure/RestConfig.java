@@ -14,6 +14,12 @@ import org.springframework.web.filter.CorsFilter;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+/**
+ * Created by Vannaravuth Yo
+ * Date : 9/16/2017, 11:58 AM
+ * Email : ravuthz@gmail.com
+ */
+
 @Configuration
 public class RestConfig extends RepositoryRestConfigurerAdapter {
 

@@ -13,6 +13,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Created by Vannaravuth Yo
@@ -46,13 +47,20 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
-                .requestMatcher(new OAuthRequestedMatcher())
-                .csrf().disable()
-                .anonymous().disable()
-                .formLogin().disable()
-                .httpBasic().disable()
-                .authorizeRequests()
+//                .requestMatcher(new OAuthRequestedMatcher())
+//                .requestMatchers()
+//                .requestMatchers().antMatchers("/**").and()
+//
+                .cors().and().anonymous()
 
+                .and()
+//                .csrf().disable()
+//                .anonymous().disable()
+//                .formLogin().disable()
+//                .httpBasic().disable()
+                .authorizeRequests()
+                
+                // Allow anonymous resource requests
                 .antMatchers(
                         "/",
                         "/v2/api-docs",
@@ -61,16 +69,22 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
                         "/configuration/security",
                         "/swagger-ui.html",
                         "/webjars/**",
-                        "/rest/**"
-                ).permitAll();
+                        "/rest/api/**"
+                ).permitAll()
 
-//                .anyRequest().authenticated();
+                // Otherwise requests need to be authenticated
+                .anyRequest().authenticated()
+
+                .and().exceptionHandling().authenticationEntryPoint(
+                (request, response, authException) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED))
+        ;
     }
 
-    private static class OAuthRequestedMatcher implements RequestMatcher {
+    private static class OAuthRequestedMatcher1 implements RequestMatcher {
         public boolean matches(HttpServletRequest request) {
             String auth = request.getHeader("Authorization");
             System.out.println("auth: " + auth);
+            System.out.println("request: " + request.getServletPath());
             // Determine if the client request contained an OAuth Authorization
             boolean haveOauth2Token = (auth != null) && auth.startsWith("Bearer");
             boolean haveAccessToken = request.getParameter("access_token") != null;
@@ -78,17 +92,17 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
         }
     }
 
-//    private static class OAuthRequestedMatcher implements RequestMatcher {
-//        public boolean matches(HttpServletRequest request) {
-//            String api = "/rest/api/";
-//            int length = api.length();
-//            String path = request.getServletPath();
-//            if (path.length() >= length) {
-//                path = path.substring(0, length);
-//                boolean isApi = path.equals(api);
-//                return isApi;
-//            }
-//            return false;
-//        }
-//    }
+    private static class OAuthRequestedMatcher2 implements RequestMatcher {
+        public boolean matches(HttpServletRequest request) {
+            String api = "/rest/api/";
+            int length = api.length();
+            String path = request.getServletPath();
+            if (path.length() >= length) {
+                path = path.substring(0, length);
+                return path.equals(api);
+            }
+            return false;
+        }
+    }
+
 }
