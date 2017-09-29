@@ -1,6 +1,5 @@
 package com.khmersolution.moduler.configure;
 
-import com.khmersolution.moduler.service.UserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +10,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
@@ -39,22 +39,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .cors().and()
                 .csrf().disable()
                 .anonymous().disable()
                 .formLogin().disable()
                 .httpBasic().and()
                 .authorizeRequests()
-
-                .antMatchers("/").permitAll()
-                .antMatchers("/v2/api-docs").permitAll()
-                .antMatchers("/swagger-resources").permitAll()
-                .antMatchers("/configuration/ui").permitAll()
-                .antMatchers("/configuration/security").permitAll()
-                .antMatchers("/swagger-ui.html").permitAll()
-                .antMatchers("/webjars/**").permitAll()
-                .antMatchers("/rest/api/**").permitAll()
-
                 .anyRequest().authenticated();
     }
 
