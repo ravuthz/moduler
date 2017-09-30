@@ -82,9 +82,7 @@ public class JPASpecificationsTest {
     private List<User> queryWithCriteria(String key, String operation, String value) {
         UserSpecification spec = new UserSpecification(new SearchCriteria(key, operation, value));
         List<User> results = userRepository.findAll(spec);
-//        Page<User> pageUsers = (Page<User>) userRepository.findAll(spec);
         log.debug("found list" + results);
-//        log.debug("found page", pageUsers);
         return results;
     }
 
@@ -97,10 +95,7 @@ public class JPASpecificationsTest {
         }
         Specification<User> spec = builder.build();
         List<User> userList = userRepository.findAll(spec);
-//        Page<User> userPage = (Page<User>) userList;
-
         log.debug("found list" + userList);
-//        log.debug("found page", userPage);
         return userList;
 
     }

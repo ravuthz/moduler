@@ -60,6 +60,7 @@ public class User extends BaseEntity implements Serializable {
     @ApiModelProperty(notes = "User's login attempts count")
     private Integer failedLoginAttempts = 0;
 
+    @JsonIgnore
     @ApiModelProperty(notes = "User's roles")
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "userRole",
