@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
@@ -47,7 +48,7 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
-//                .requestMatcher(new OAuthRequestedMatcher())
+                .requestMatcher(new OAuthRequestedMatcher())
 //                .requestMatchers()
 //                .requestMatchers().antMatchers("/**").and()
 //
@@ -59,18 +60,6 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
 //                .formLogin().disable()
 //                .httpBasic().disable()
                 .authorizeRequests()
-                
-                // Allow anonymous resource requests
-                .antMatchers(
-                        "/",
-                        "/v2/api-docs",
-                        "/swagger-resources",
-                        "/configuration/ui",
-                        "/configuration/security",
-                        "/swagger-ui.html",
-                        "/webjars/**",
-                        "/rest/api/**"
-                ).permitAll()
 
                 // Otherwise requests need to be authenticated
                 .anyRequest().authenticated()
@@ -82,7 +71,7 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
         ;
     }
 
-    private static class OAuthRequestedMatcher1 implements RequestMatcher {
+    private static class OAuthRequestedMatcher implements RequestMatcher {
         public boolean matches(HttpServletRequest request) {
             String auth = request.getHeader("Authorization");
             System.out.println("auth: " + auth);
