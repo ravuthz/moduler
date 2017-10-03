@@ -22,7 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 
 @Configuration
 @EnableResourceServer
-//@EnableGlobalMethodSecurity(prePostEnabled = true)
 @SuppressWarnings("SpringJavaAutowiringInspection")
 public class ResourceConfig extends ResourceServerConfigurerAdapter {
 
@@ -48,38 +47,9 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
         http.requestMatcher(new OAuthRequestedMatcher())
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
-                .anyRequest().authenticated();
-//        http
-//                .requestMatcher(new OAuthRequestedMatcher())
-//                .cors().and().anonymous()
-//
-//                .and().csrf().disable()
-//                .formLogin().disable()
-//                .httpBasic().disable()
-//                .authorizeRequests()
-//
-//                // Allow anonymous resource requests
-//                .antMatchers(
-//                        "/",
-//                        "/v2/api-docs",
-//                        "/swagger-resources",
-//                        "/configuration/ui",
-//                        "/configuration/security",
-//                        "/swagger-ui.html",
-//                        "/webjars/**",
-//                        "/rest/api/**",
-//                        "/oauth/**"
-//                ).permitAll()
-//
-//                .anyRequest().authenticated()
-//
-//                .and().exceptionHandling().authenticationEntryPoint(
-//                entryPoint
-////                (request, response, authException) -> response.sendError(HttpServletResponse.SC_UNAUTHORIZED)
-//        )
-//
-//                .and().headers().cacheControl();
-//        ;
+                .anyRequest().authenticated()
+                .and().httpBasic()
+                .and().csrf().disable();
     }
 
     private static class OAuthRequestedMatcher implements RequestMatcher {

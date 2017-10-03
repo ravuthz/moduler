@@ -1,10 +1,8 @@
 package com.khmersolution.moduler.configure;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -44,31 +42,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
-                .antMatchers("/oauth/**").fullyAuthenticated()
                 .anyRequest().authenticated()
                 .and().httpBasic()
                 .and().csrf().disable();
-
-
-//        http
-//                .csrf().disable()
-//                .formLogin().disable()
-//                .httpBasic().and()
-//                .authorizeRequests()
-//
-//                .antMatchers(
-//                        "/",
-//                        "/v2/api-docs",
-//                        "/swagger-resources",
-//                        "/configuration/ui",
-//                        "/configuration/security",
-//                        "/swagger-ui.html",
-//                        "/webjars/**",
-//                        "/rest/api/**",
-//                        "/oauth/**"
-//                ).permitAll()
-//
-//                .anyRequest().authenticated();
     }
 
     @Override
