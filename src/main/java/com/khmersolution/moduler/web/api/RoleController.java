@@ -29,7 +29,9 @@ public class RoleController {
     private RoleService roleService;
 
     @RequestMapping(params = {"page", "size"}, method = RequestMethod.GET)
-    public ResponseEntity<Page<Role>> getRoles(@RequestParam("page") int page, @RequestParam("size") int size) {
+    public ResponseEntity<Page<Role>> getRoles(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "20") int size) {
         Page<Role> users = roleService.getAll(new PageRequest(page, size));
         return new ResponseEntity<>(users, HttpStatus.OK);
     }

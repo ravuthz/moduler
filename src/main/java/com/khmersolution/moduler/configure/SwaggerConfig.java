@@ -5,6 +5,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.rest.webmvc.BasePathAwareController;
+import org.springframework.data.rest.webmvc.RepositoryRestController;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -21,9 +24,7 @@ import springfox.documentation.swagger.web.SecurityConfiguration;
 import springfox.documentation.swagger.web.UiConfiguration;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static com.google.common.base.Predicates.or;
 
@@ -39,8 +40,9 @@ import static com.google.common.base.Predicates.or;
 public class SwaggerConfig {
 
     public static final String AUTHORIZATION = "AUTHORIZATION";
-    private static final String securitySchemaOAuth2 = "basic";
-    private static final String authorizationTokenURL = "http://localhost:8080/oauth/token";
+
+    @Value("${security.oauth2.url}")
+    private String oAuthTokenUrl;
 
     @Value("${swagger.apiInfo.title:}")
     private String title;
@@ -103,18 +105,28 @@ public class SwaggerConfig {
                 parameterBuilder("query", sortKey, sortDescription, sortValue, intModel, false)
         );
 
+        Set<String> produces = new HashSet<>();
+        produces.add(MediaType.APPLICATION_JSON_VALUE);
+        produces.add(MediaType.APPLICATION_ATOM_XML_VALUE);
+        produces.add("application/hal+json");
+        produces.add("text/uri-list");
+        produces.add("application/x-spring-data-compact+json");
+
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(
                         or(
                                 RequestHandlerSelectors.withClassAnnotation(Repository.class),
                                 RequestHandlerSelectors.withClassAnnotation(RestController.class),
-                                RequestHandlerSelectors.basePackage("org.springframework.security.oauth2.provider.endpoint")
+                                RequestHandlerSelectors.withClassAnnotation(BasePathAwareController.class),
+                                RequestHandlerSelectors.withClassAnnotation(RepositoryRestController.class)
+//                                RequestHandlerSelectors.basePackage("org.springframework.security.oauth2.provider.endpoint")
                         )
                 )
                 .paths(PathSelectors.any())
                 .build()
-                .globalOperationParameters(parameterList)
+//                .globalOperationParameters(parameterList)
+                .produces(produces)
                 .apiInfo(apiInfoBuilder())
                 .securityContexts(Lists.newArrayList(securityContext()))
                 .securitySchemes(Collections.singletonList(securitySchema()));
@@ -140,7 +152,7 @@ public class SwaggerConfig {
                 null,
                 null,
                 null,
-                "Bearer access_token",
+                null,
                 ApiKeyVehicle.HEADER,
                 AUTHORIZATION,
                 ","
@@ -159,7 +171,8 @@ public class SwaggerConfig {
                 .build();
     }
 
-    private Parameter parameterBuilder(String type, String name, String description, String defaultValue, ModelRef modelRef, boolean required) {
+    private Parameter parameterBuilder(String type, String name, String description, String defaultValue,
+                                       ModelRef modelRef, boolean required) {
         return new ParameterBuilder()
                 .name(name)
                 .description(description)
@@ -169,16 +182,22 @@ public class SwaggerConfig {
                 .required(required).build();
     }
 
-    private OAuth securitySchema() {
-        List<AuthorizationScope> authorizationScopeList = Arrays.asList(
-                new AuthorizationScope(AuthorizationConfig.SCOPE_READ, AuthorizationConfig.SCOPE_READ_DESC),
-                new AuthorizationScope(AuthorizationConfig.SCOPE_WRITE, AuthorizationConfig.SCOPE_WRITE_DESC)
-        );
+    private List<AuthorizationScope> scopes() {
+        List<AuthorizationScope> list = new ArrayList();
+        list.add(new AuthorizationScope(AuthorizationConfig.SCOPE_READ, AuthorizationConfig.SCOPE_READ_DESC));
+        list.add(new AuthorizationScope(AuthorizationConfig.SCOPE_WRITE, AuthorizationConfig.SCOPE_WRITE_DESC));
+        return list;
+    }
 
-        ResourceOwnerPasswordCredentialsGrant resourceOwnerPasswordCredentialsGrant = new ResourceOwnerPasswordCredentialsGrant(authorizationTokenURL);
+    private List<GrantType> grantTypes() {
+        ResourceOwnerPasswordCredentialsGrant resourceOwnerPasswordCredentialsGrant =
+                new ResourceOwnerPasswordCredentialsGrant(oAuthTokenUrl);
         List<GrantType> grantTypes = Collections.singletonList(resourceOwnerPasswordCredentialsGrant);
+        return grantTypes;
+    }
 
-        return new OAuth(AUTHORIZATION, authorizationScopeList, grantTypes);
+    private OAuth securitySchema() {
+        return new OAuth(AUTHORIZATION, scopes(), grantTypes());
     }
 
     private List<SecurityReference> defaultAuth() {

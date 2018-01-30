@@ -17,8 +17,14 @@ security:
         resource:
             filter-order: 3
         resourceId: oauth2-jwt-resource
+        realm: trusted-app
+        client-id: trusted-app
+        client-secret: secret
+        grant-type: password #client_credentials, password, refresh_token
+        authorities: TRUSTED_CLIENT
+        url: http://localhost:9999/oauth/token
 server:
-    port: ${PORT:8080}
+    port: ${PORT:9999}
     contextPath: /
 spring:
     data:
@@ -55,7 +61,7 @@ swagger:
         contactEmail: ravuthz@gmail.com
         contactName: ravuthz@gmail.com
         contactUrl: http://github.com/ravuthz/user-management-api
-        description: Users Restful API with Spring Boot + Spring Data + Spring Rest.
+        description: Users Management REST API with Spring Boot + Spring Data JPA + Spring Data REST + Spring Security + Spring Security JWT + Spring Security OAUTH 2.
         license: Apache 2.0
         licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.html
         termOfServiceUrl: http://swagger.io/terms/

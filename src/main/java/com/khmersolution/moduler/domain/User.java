@@ -43,6 +43,7 @@ public class User extends BaseEntity implements Serializable {
     private String username;
 
     @NotEmpty
+    @JsonIgnore
     @ApiModelProperty(notes = "User's password (Must be strong)", required = true)
     private String password;
 

@@ -1,7 +1,10 @@
 package com.khmersolution.moduler.web.api;
 
 import com.khmersolution.moduler.configure.Route;
+import com.khmersolution.moduler.domain.Role;
 import com.khmersolution.moduler.domain.User;
+import com.khmersolution.moduler.repository.RoleRepository;
+import com.khmersolution.moduler.repository.UserRepository;
 import com.khmersolution.moduler.service.UserService;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
 
 /**
  * Created by Vannaravuth Yo
@@ -28,10 +33,44 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @RequestMapping(value = "/containsRole", method = RequestMethod.GET)
+    public ResponseEntity<Page<User>> getUsersContainsRoles(
+            @RequestParam(value = "role") String name,
+            @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "size", defaultValue = "20", required = false) int size
+    ) {
+        Role role = roleRepository.findByName(name);
+        Page<User> users = null;
+        if (role != null) {
+            users = userRepository.findAllByRolesContains(Arrays.asList(role), new PageRequest(page, size));
+        }
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/equalsRole", method = RequestMethod.GET)
+    public ResponseEntity<Page<User>> getUsersEqualsRoles(
+            @RequestParam(value = "role") String name,
+            @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "size", defaultValue = "20", required = false) int size
+    ) {
+        Role role = roleRepository.findByName(name);
+        Page<User> users = null;
+        if (role != null) {
+            users = userRepository.findAllByRolesEquals(Arrays.asList(role), new PageRequest(page, size));
+        }
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<Page<User>> getUsers(
             @RequestParam(value = "page", defaultValue = "0", required = false) int page,
-            @RequestParam(value = "size", defaultValue = "10", required = false) int size) {
+            @RequestParam(value = "size", defaultValue = "20", required = false) int size) {
         Page<User> users = userService.getAll(new PageRequest(page, size));
         return new ResponseEntity<>(users, HttpStatus.OK);
     }

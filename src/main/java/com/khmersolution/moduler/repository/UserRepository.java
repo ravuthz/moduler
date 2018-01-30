@@ -1,11 +1,14 @@
 package com.khmersolution.moduler.repository;
 
+import com.khmersolution.moduler.domain.Role;
 import com.khmersolution.moduler.domain.User;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.List;
@@ -16,6 +19,7 @@ import java.util.List;
  * Email : ravuthz@gmail.com
  */
 
+@RepositoryRestResource
 public interface UserRepository extends PagingAndSortingRepository<User, Long>, JpaSpecificationExecutor<User> {
 
     User findByEmailAndEnabledTrue(@Param("email") String email);
@@ -44,5 +48,10 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long>, 
     @Query(value = "select id, username, firstName, lastName from User")
     List<User> getQueryOnlyName(Pageable pageable);
 
+    @RestResource(path = "equals-role", rel = "username")
+    Page<User> findAllByRolesEquals(@Param("roles") List<Role> roles, Pageable pageable);
+
+    @RestResource(path = "contains-role", rel = "username")
+    Page<User> findAllByRolesContains(@Param("roles") List<Role> roles, Pageable pageable);
 
 }

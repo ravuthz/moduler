@@ -7,3 +7,42 @@
                         $$ |  $$ |$$\   $$ |$$ |      $$ |  $$ |      $$ |  $$ |$$ |        $$ |
                         \$$$$$$  |\$$$$$$  |$$$$$$$$\ $$ |  $$ |      $$ |  $$ |$$ |      $$$$$$\
                          \______/  \______/ \________|\__|  \__|      \__|  \__|\__|      \______|
+
+
+Client:
+    - Client Id = trusted-app
+    - Client Secret = secret
+
+Users: (Password: 123123)
+    - client
+    - adminz
+    - ravuthz
+
+http://localhost:8080/oauth/token
+- Basic Auth:
+    Username: trusted-app
+    Password: secret
+- Body (x-www-form-urlencode)
+    grant_type: password
+    username: ravuthz
+    password: 123123
+
+
+
+http://localhost:8080/api/v1/roles
+http://localhost:8080/api/v1/users
+
+http://localhost:8080/rest/api/auth
+http://localhost:8080/rest/api/user
+http://localhost:8080/rest/api/hello
+http://localhost:8080/rest/api/admin
+http://localhost:8080/rest/api/client
+
+http://localhost:8080/rest/api/profile
+http://localhost:8080/rest/api/roles
+http://localhost:8080/rest/api/users
+http://localhost:8080/rest/api/search/users
+http://localhost:8080/rest/api/search/page/users
+
+http://localhost:8080/v2/api-docs
+http://localhost:8080/swagger-ui.html

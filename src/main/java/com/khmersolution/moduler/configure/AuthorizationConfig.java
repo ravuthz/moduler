@@ -34,6 +34,15 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
     public static final String SCOPE_READ_DESC = "Can read only";
     public static final String SCOPE_WRITE_DESC = "Can write only";
 
+    @Value("${security.oauth2.client-id}")
+    private String CLIENT_ID;
+
+    @Value("${security.oauth2.client-secret}")
+    private String CLIENT_SECRET;
+
+    @Value("${security.oauth2.authorities}")
+    private String AUTHORITIES;
+
     @Value("${security.oauth2.resourceId}")
     private String resourceId;
 
@@ -48,8 +57,8 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
         endpoints
                 .tokenStore(tokenStore())
                 .tokenServices(tokenServices())
-                .authenticationManager(authenticationManager)
-                .accessTokenConverter(accessTokenConverter());
+                .accessTokenConverter(accessTokenConverter())
+                .authenticationManager(authenticationManager);
     }
 
     @Override
@@ -62,10 +71,10 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory()
-                .withClient("trusted-app")
-                .secret("secret")
-                .authorizedGrantTypes("client_credentials", "password", "refresh_token")
-                .authorities("TRUSTED_CLIENT")
+                .withClient(CLIENT_ID)
+                .secret(CLIENT_SECRET)
+                .authorizedGrantTypes("client_credentials", "password", "refresh_token", "implicit")
+                .authorities(AUTHORITIES)
                 .scopes(SCOPE_READ, SCOPE_WRITE)
                 .resourceIds(resourceId)
                 .accessTokenValiditySeconds(accessTokenValiditySeconds)
