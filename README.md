@@ -22,13 +22,13 @@
 
 ### Clone Project
 ``
-clone https://github.com/ravuthz/moduler.git this project
+git clone https://github.com/ravuthz/moduler.git
 ``
 
 ### Build and Run Project
 ```
+cd moduler
 gradle build -x test
-
 gradle bootRun
 ```
 
