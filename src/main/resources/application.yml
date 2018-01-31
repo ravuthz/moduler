@@ -2,13 +2,13 @@ logging:
     level:
         com:
             khmersolution:
-                moduler: DEBUG
-        org:
-            hibernate:
-                SQL: debug
-                type:
-                    descriptor:
-                        sql: trace
+                moduler: INFO
+#        org:
+#            hibernate:
+#                SQL: debug
+#                type:
+#                    descriptor:
+#                        sql: trace
     pattern:
         console: '%clr(%d{HH:mm:ss}){magenta} %-5level - %clr(%msg%n){cyan}'
         file: '%d{yyyy-MMM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{15} - %msg%n'
@@ -23,6 +23,12 @@ security:
         grant-type: password #client_credentials, password, refresh_token
         authorities: TRUSTED_CLIENT
         url: http://localhost:9999/oauth/token
+#    user:
+#        name: admin
+#        password: admin
+#    basic:
+#        enabled: false
+
 server:
     port: ${PORT:9999}
     contextPath: /
@@ -45,7 +51,7 @@ spring:
     h2:
         console:
             enabled: true
-            path: /h2ó
+            path: /h2
     jpa:
         hibernate:
             ddl-auto: create
@@ -75,3 +81,18 @@ swagger:
         page: 0
         size: 20
         sort: id,desc
+
+management:
+#    port: 7777
+#    address: 127.0.0.1
+#    security:
+#        enabled: false
+#        roles: ACTUATOR
+        contextPath: /manages
+info:
+    app:
+        name: Spring Sample Application
+        description: This is my first spring boot application
+        version: 1.0.0
+error:
+    debug: true

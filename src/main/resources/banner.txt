@@ -27,22 +27,20 @@ http://localhost:8080/oauth/token
     username: ravuthz
     password: 123123
 
+http://localhost:9999/api/v1/roles
+http://localhost:9999/api/v1/users
 
+http://localhost:9999/rest/api/auth
+http://localhost:9999/rest/api/user
+http://localhost:9999/rest/api/hello
+http://localhost:9999/rest/api/admin
+http://localhost:9999/rest/api/client
 
-http://localhost:8080/api/v1/roles
-http://localhost:8080/api/v1/users
+http://localhost:9999/rest/api/profile
+http://localhost:9999/rest/api/roles
+http://localhost:9999/rest/api/users
+http://localhost:9999/rest/api/search/users
+http://localhost:9999/rest/api/search/page/users
 
-http://localhost:8080/rest/api/auth
-http://localhost:8080/rest/api/user
-http://localhost:8080/rest/api/hello
-http://localhost:8080/rest/api/admin
-http://localhost:8080/rest/api/client
-
-http://localhost:8080/rest/api/profile
-http://localhost:8080/rest/api/roles
-http://localhost:8080/rest/api/users
-http://localhost:8080/rest/api/search/users
-http://localhost:8080/rest/api/search/page/users
-
-http://localhost:8080/v2/api-docs
-http://localhost:8080/swagger-ui.html
+http://localhost:9999/v2/api-docs
+http://localhost:9999/swagger-ui.html

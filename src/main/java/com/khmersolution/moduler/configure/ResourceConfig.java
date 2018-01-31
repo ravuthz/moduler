@@ -43,8 +43,11 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.requestMatcher(new OAuthRequestedMatcher())
+        http
+//                .requestMatcher(new OAuthRequestedMatcher())
                 .authorizeRequests()
+                .antMatchers("/oauth/**").permitAll()
+                .antMatchers("/manages/**").permitAll()
                 .anyRequest().authenticated()
                 .and().httpBasic()
                 .and().csrf().disable();
