@@ -92,7 +92,7 @@ public class ModulerApplication implements CommandLineRunner {
                 User.staticUser("clientz", "trusted")
         ));
         List<User> userList = new ArrayList<>();
-        for (int i=1; i<=100; i++) {
+        for (int i = 1; i <= 100; i++) {
             userList.add(User.staticUser("test_" + i, "user"));
         }
         userRepository.save(userList);

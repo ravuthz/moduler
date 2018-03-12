@@ -96,3 +96,15 @@ info:
         version: 1.0.0
 error:
     debug: true
+# Enable GraphQL Servlet
+#graphql:
+#    servlet:
+#        mapping: /graphql
+#        enabled: true
+#        corsEnabled: true
+# Enable GraphQL Tool
+#graphiql:
+#    mapping: /graphiql
+#    endpoint: /graphql
+#    enabled: true
+#    pageTitle: GraphiQL

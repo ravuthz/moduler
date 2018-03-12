@@ -39,3 +39,7 @@ gradle bootRun
 [http://localhost:9999/swagger-ui.html](http://localhost:9999/swagger-ui.html)
 
 [![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+
+
+TODO
+https://www.pluralsight.com/guides/java-and-j2ee/building-a-graphql-server-with-spring-boot

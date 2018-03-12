@@ -1,0 +1,17 @@
+type Query {
+    getAllUsers: [User]!
+    countUsers: Long!
+}
+
+type User {
+    id: ID!
+    email: String!
+    username: String!
+    password: String!
+    firstName: String!
+    lastName: String!
+}
+
+type Mutation {
+    newUser(firstName: String!, lastName: String!) : User!
+}
